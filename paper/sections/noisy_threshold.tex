@@ -1,0 +1,67 @@
+\section{The sharp threshold with an exponential error budget}\label{sec:noisy-face-proof}
+\begin{theorem}\label{thm:noisy-face}
+In the binary model of Theorem~\ref{thm:box}, fix \(A>0\) and \(B>0\).
+Let \(K=e^{An^{1/3}}\) and \(E=\lfloor e^{Bn^{1/3}}\rfloor\).
+The probability of recovering every face under the error budget \(E\)
+tends to one for \(A-2B\ge C\) and to zero for \(A-2B<C\), where
+\(C=3.4417465206\ldots\) is the binary first-moment constant.
+For noiseless recovery or any fixed nonnegative error budget, failure
+instead occurs at equality \(A=C\).
+\end{theorem}
+
+\begin{proof}
+The recovery assertion strictly above the cutoff was proved in Theorem~\ref{thm:box}, and the failure assertion at equality \(A=C\) for any fixed nonnegative error budget follows immediately from Theorem~\ref{thm:face-wHP}. Two claims remain: failure below the cutoff \(A-2B<C\), which we establish by a smoothed second moment method on opposite-face pairs, and recovery at equality \(A-2B=C\) when \(B>0\), which we prove by refining the union bound with a triangular pivot-row exposure and an \(\ell^1\)-ball count. Write \(D=A-2B\), \(s=n^{1/3}\), and \(W=n^{2/3}\).
+
+\step{Failure below the cutoff.}
+It suffices to treat the range \(0<D<C\): if \(D\le0\), we may choose a smaller positive \(B'\) at fixed \(A\) such that \(0<A-2B'<C\) and invoke monotonicity in the error budget. Use the same even codimension \(r\) nearest \(\rho n\) at the maximizing fraction \(\rho\), and the same \(N=\binom nr2^{r-1}\) opposite-face candidates, as in the noiseless proof. For a given candidate, let \(S_j=H_j-H_{r-j}\) denote its folded shell differences for \(j<r/2\), which have variance \(2(1-p)\lambda_j\), where \(\lambda_j=K\prob(\Bin(r,1/2)=j)\). Half of the candidate's \(\ell^1\) histogram discrepancy equals \(\sum_j|S_j|\), so the two opposite faces are confusable whenever this sum is at most \(2E\). Set \(M_0=E/n^2\) and assign the candidate the smoothed weight
+\[
+ Y=\mathbf1_{\sum_j|S_j|\le2E}
+       \exp\left(-\frac{\sum_j S_j^2}{2M_0^2}\right).
+\]
+This weight takes values in \([0,1]\) and vanishes unless the candidate is confusable. Dropping the indicator gives an untruncated weight that differs pointwise from \(Y\) by at most \(e^{-\Omega(n^3)}\), by applying Cauchy--Schwarz on the event \(\sum_j|S_j|>2E\). Consequently, the pointwise difference for a product of two weights is at most twice as large.
+
+We now evaluate the first and second moments of the untruncated weight using Fourier analysis. The untruncated single and joint expectations are Fourier integrals against products of the wrapped centered Gaussian probability measure of frequency variance \(M_0^{-2}\), whose integer Fourier coefficients are \(e^{-k^2/(2M_0^2)}\). By complement symmetry, the characteristic functions of the signed jumps are nonnegative, and the uniform Bernoulli-to-Poisson approximation and window projection estimates from the noiseless proof still apply with multiplicative error \(1+o(1)\). Define the row core half-width by \(T_j=e^{n^{1/5}}/\sqrt{M_0^2+2\lambda_j}\). Whenever \(\lambda_j\le M_0^2\), the wrapped Gaussian measure assigns mass at most \(e^{-\exp(\Omega(n^{1/5}))}\) to the tail \(|\theta_j|>T_j\). Whenever \(\lambda_j>M_0^2\), the typical pair's singleton intensity bound from the noiseless proof gives the same upper bound directly for the characteristic function outside that row core. For the single-candidate integral, either the wrapped Gaussian kernel tail bound or the direct marginal singleton bound applies. Since all remaining coordinate measures have total mass one, every tail outside the core is negligible on the \(e^{-O(n)}\) scale.
+
+Inside the core, the total quartic error in the Poisson characteristic exponent is at most
+\[
+ O\left( e^{4n^{1/5}}
+          \sum_j\frac{\lambda_j}{(M_0^2+2\lambda_j)^2}\right)
+ =O\left(\frac{n e^{4n^{1/5}}}{M_0^2}\right)=o(1).
+\]
+Furthermore, on the core the wrapped Gaussian density equals its main Gaussian term up to a relative factor \(1+o(1)\), uniformly after taking the product over all rows. In the resulting Gaussian integral, the whitened cross block is simply the noiseless cross block attenuated on both sides by the diagonal factors \(\sqrt{2\lambda_j/(M_0^2+2\lambda_j)}\). The signed Walsh estimate from the noiseless proof therefore keeps its Frobenius norm \(o(1)\), so the determinant ratio tends uniformly to one. After normalizing each coordinate by \(\sqrt{M_0^2+2\lambda_j}\), the Gaussian tails outside the core are again negligible. Writing \(p_*=\ex Y\), we conclude that
+\[
+ \log p_*=-\tfrac12\sum_{j<r/2}\log(1+2\lambda_j/M_0^2)+o(1)
+          =-a_\rho(D)n/2+O(W\log n),
+ \qquad \ex(YY')=(1+o(1))p_*^2
+\]
+uniformly over typical pairs. The asymptotic evaluation of the sum follows from the shell expansion of \(\log\lambda_j\) together with \(\log M_0=Bs-2\log n+o(1)\), using that replacing all rows by the retained row window changes the sum by only \(o(1)\).
+
+It remains to bound the atypical pairs. For any atypical pair, the event \(YY'>0\) requires every signed coordinate in both blocks to lie in \([-2E,2E]\). We apply the noiseless two-block modal construction, retaining only pivot rows with \(\lambda_j/E^2>1\). For any prescribed vector of values on these pivot rows, triangularity determines the conditioned cell counts, and each pivot coordinate allows at most \(4E+1\) choices. On pairs with fixed contraction, the combined log loss from the polynomial cell-mass factors, from replacing \(M_0\) by \(E\), and from omitting a bounded number of central rows is \(O(W\log n)\), giving a joint contribution per pair of at most \(p_*^2 e^{O(W\log n)}\). For pairs with contraction slack greater than \(n^{-1/2}\), at most \(O(\sqrt n)\) rows are omitted and the total loss is \(o(n)\), which is absorbed by the entropy gap of near partners. Both regimes use the atypical pair counts from Section~\ref{sec:noiseless-face-proof}. Finally, for micro-close partners we use the trivial bound \(\ex(YY')\le p_*\); there are at most \(Ne^{O(\sqrt n\log n)}\) such pairs, whereas \(Np_*\) grows exponentially in \(n\). Combining all regimes shows that the variance of the sum of weights is \(o((Np_*)^2)\), so by Chebyshev's inequality a confusable pair exists with probability tending to one.
+
+\step{Success at equality.}
+Take \(D=C\). Fix \(\varepsilon>0\) small as in the small codimension bound of Section~\ref{sec:sum-codim}, and consider any codimension \(r\ge\varepsilon n\). Write \(\rho=r/n\), \(v=\rho/4\) and \(R_\rho=\sqrt{2vD}\), and focus on the band \(|j-r/2|\le R_\rho W\). Throughout this band, the shell means are exponential in \(s\) because \(B>0\), and uniformly
+\[
+ \log\lambda_j=As-\frac{(j-r/2)^2}{2vn}-\tfrac12\log n+O(1).
+\]
+
+We first establish a general triangular pivot-row upper bound. Suppose we choose \(m\) pivot rows inside this band, and in each pivot row we select a subset of cube words of intensity at least \(\beta_j\lambda_j\) that contributes \(+1\) at that row and places any remaining contribution either outside the pivots or in a pivot row of strictly smaller folded radius. Condition on all landmarks outside these subsets, and expose the subsets in order of decreasing folded radius. For any fixed target output vector on the pivot rows, by the time a pivot row is tested, all contributions from earlier subsets are known and no unexposed group other than its own can affect it. Its own subset contributes an independent binomial count, so the probability of hitting the fixed output vector is at most \(\prod_j O((\beta_j\lambda_j)^{-1/2})\). The subsets of words are pairwise disjoint because each word has a unique leading pivot row. For the pair to be confusable, the projected integer vector on the pivot rows must have \(\ell^1\) norm at most \(4E\), which allows at most \(2^m\binom{4E+m}{m}\) possibilities; since \(E\) is exponential, the logarithm of this count is at most \(m(\log E-\log m+O(1))\). Combining the atom bound with the count of target vectors shows that a full band of \(m=2R_\rho W+O(1)\) pivots has leading log cost \(-a_\rho(D)n\), and a half band of \(m=R_\rho W+O(1)\) pivots has leading log cost \(-a_\rho(D)n/2\), in both cases with the subleading correction
+\[
+ -\tfrac5{12}m\log n+O(W)-\tfrac12\sum_j\log\beta_j.
+\]
+Here Stirling's formula in \(\log\lambda_j\) contributes \(+\tfrac14 m\log n\), whereas the \(-m\log m\) term from the total budget count contributes \(-\tfrac23 m\log n\). Whenever the number of omitted rows is \(o(W)\), each omitted row changes the estimate by at most \(O(s)\). Moreover, because \(D=C\), we have \(a_\rho(D)\ge2h_{\rm face}(\rho)\) for all \(\rho\).
+
+\step{Case analysis by alignment.}
+We now partition all pairs of faces of codimension \(r\) into three regimes and apply the pivot bound or the forest bound to each.
+
+First, consider a regular pair, meaning \(|a_0-b_0|\le(1-\delta)r\) for a fixed \(\delta>0\). For outer rows at folded radius at least \(\sqrt n\log n\), condition on a word lying in the first shell. Its distance to the second face has variance \(O(n)\): the contribution from shared coordinates is a sum of weights in \(\{-1,0,1\}\) over a uniform subset of specified size, and the contribution from the exclusive coordinates is an independent binomial variable. Because the conditional radius of the mean is at most \((1-\delta)\) times the first radius, Chebyshev's inequality shows that at least half of the shell mass strictly descends in folded radius, and we use all of this descending mass. For inner rows, we instead use the polynomial-mass modal cell, omitting \(O_\delta(1)\) central rows; the extra log penalty from these inner rows is only \(O(\sqrt n\log^2 n)=o(W\log n)\). The number of pairs at codimension \(r\) is at most \(e^{2h_{\rm face}(\rho)n+O(\log n)}\), so the negative subleading correction yields an aggregate \(e^{-\Omega(W\log n)}\) upper bound uniformly over all such codimensions.
+
+Second, consider near agreement, where \(a_0-b_0>(1-\delta)r\). Here the fixed-shift forest bound from the first-moment proof gives
+\[
+ \log\prob(\text{confusable})\le -\sqrt{a_0/r}\,a_\rho(D)n+o(n).
+\]
+Counting pairs by choosing edits from one face to the other shows that there are at most \(e^{h_{\rm face}(\rho)n+O(\delta\log(1/\delta))n+O(\log n)}\) such pairs. Since \(a_0>(1-\delta)r\) and \(\rho\ge\varepsilon\), this leaves an order-\(n\) gap in the exponent for sufficiently small fixed \(\delta\).
+
+Third, consider near opposition, and set \(k=r-(b_0-a_0)\). If \(k>s\sqrt{\log n}\), the rounded modal contraction with slack \(k/r\) omits at most \(O(n/k)=o(W)\) central rows. The full-band leading cost \(-a_\rho(D)n+o(n)\) already suffices in this subcase, even with the coarser per-cut interval bound, because counting pairs by edits from the opposite face yields the same entropy gap as in near agreement. If instead \(k\le s\sqrt{\log n}\), then every word satisfies \(|d_1+d_2-r|\le a_0+c\le k\), where \(c\) is the size of each exclusive support. Consequently, every word in a first-distance shell \(j<r/2-k\) in the lower half band contributes \(+1\) in its own pivot row and nothing in any other lower pivot row. We therefore use the full shell mass on the lower half band. Omitting \(O(k+1)\) central rows costs \(O((k+1)s)=o(W\log n)\), and the near-partner count multiplier is at most \(e^{O((k+1)\log n)}=e^{o(W\log n)}\). The half-band leading cost cancels the face count exponent at worst, again leaving \(-\Omega(W\log n)\) from the projection correction.
+
+Summing over all codimensions \(r\ge\varepsilon n\) yields a negligible failure probability. For smaller codimensions, the robust forest bound from the first-moment theorem applies at this fixed positive \(D\), and its constants permit the same sufficiently small \(\varepsilon\). Pairs of faces with different codimensions are separated by their empirical means. This proves the endpoint assertion.
+\end{proof}

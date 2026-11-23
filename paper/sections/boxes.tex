@@ -1,0 +1,170 @@
+\section{Joint resolution of coordinate boxes}
+A coordinate box is a Cartesian product $X=\prod_i S_i$ of nonempty subsets of $[q]$, one for each of the $n$ coordinates. The distance from a word to $X$ is the number of coordinates in which the word falls outside the prescribed subset $S_i$.
+
+In this section we prove that the minimum number of landmarks required to resolve all coordinate boxes simultaneously is $\exp(\Theta_q(n^{1/3}))$. To establish the upper bound, we sample landmarks at random: write $s=n^{1/3}$ and independently retain each word with probability $p=K/q^n$, where $K=e^{As}$ for a constant $A$ to be chosen large in terms of $q$. Write $N$ for the total number of retained landmarks and $H_X$ for the resulting distance histogram of a box $X$.
+
+The argument proceeds in two stages. First, we show that the empirical moments of the distance histograms distinguish any two boxes whose coordinate subset sizes occur with different multiplicities. Second, for two distinct boxes with the same multiplicities of subset sizes, we extract a family of disjoint distance-pair cells forming a forest and use their independence to bound the probability of a histogram collision.
+
+\subsection{Different types}\label{sec:different-box-types}
+The type of a coordinate box records the multiplicities of the subset sizes among its $n$ coordinates. We show that the first $q-1$ cumulants of the distance from a uniform random word determine the type with a uniform quantitative gap, and that the empirical cumulants computed from the sampled landmarks approximate these population cumulants within less than half that gap for all boxes simultaneously.
+
+Under a uniformly random word $U$, the coordinates are independent, so the distance from $U$ to a box $X$ is a sum of independent Bernoulli random variables with parameters $p_i=1-|S_i|/q$. The $k$th cumulant of a Bernoulli random variable with parameter $p$, obtained by differentiating its cumulant generating function $\log(1+p(e^z-1))$ $k$ times at zero, is an integer polynomial in $p$ with zero constant term and leading coefficient $(-1)^{k-1}(k-1)!$. Because cumulants are additive over independent summands, each of the first $q-1$ cumulants of the distance is a linear combination of the power sums of the $p_i$ up to that order, with nonzero leading coefficient. By additivity and triangular elimination, the first $q-1$ cumulants therefore determine the power sums $\sum_i p_i^k$ for $1\le k\le q-1$.
+
+Since the nonzero values of $p_i$ are distinct fractions corresponding to the subset sizes smaller than $q$, the linear system recovering their multiplicities from these power sums has coefficient matrix equal to a Vandermonde matrix times an invertible diagonal matrix. This system is invertible, and subtracting the sum of the nonzero multiplicities from $n$ then gives the zero multiplicity (the number of unconstrained coordinates). Because each $p_i$ is an integer multiple of $1/q$ and the $k$th cumulant is an integer polynomial in the $p_i$ of degree $k$, any two boxes of different types must differ in some $k$th cumulant by at least $q^{-k}$.
+
+To compare the empirical moments with their population values, let $I_u$ be the indicator that word $u$ is retained as a landmark. For each pair $X,k$, consider the centered sum $\sum_u (I_u-p)(d(u,X)^k-\mathbb E d(U,X)^k)$. This sum has mean zero, variance at most $Kn^{2k}$, and independent centered summands each bounded in magnitude by $n^k$. By Bernstein's inequality, the probability that this sum exceeds $Kn^{-J}$ in absolute value is at most $2\exp(-cKn^{-2J-2k})$.
+
+We now take a union bound over all $(2^q-1)^n$ boxes and all $q-1$ moment orders, and intersect with the high-probability event $N\ge K/2$. Dividing the centered sum by $N$ on this event shows that all empirical raw moment errors are at most $2n^{-J}$. Since the first $q-1$ cumulants are fixed polynomials in the raw moments, and each raw moment of order $k$ has magnitude at most $n^k$, choosing $J$ sufficiently large in terms of $q$ ensures that every empirical cumulant differs from its population value by less than $1/(4q^{q-1})$. Because this error is less than half the minimum separation between distinct types, the distance histograms distinguish all box types with high probability.
+
+\subsection{Equal types: constructing independent cell counts}\label{sec:box-forest}
+We now show that with high probability no two distinct boxes of the same type share the same distance histogram. For any fixed pair of distinct boxes of the same type, our strategy is to construct a large collection of disjoint subsets of words (cells) whose pairs of distances to the two boxes form the edges of a directed forest. Because the landmark counts in disjoint cells are independent and the oriented incidence matrix of a forest has full column rank, a histogram collision forces these counts to take at most one specific vector of values, which we bound using the binomial maximal-atom estimate.
+
+\step{Isolating a homogeneous block and a central window.}
+Put $\Lambda=As$, so that the expected number of landmarks is $K=e^{\Lambda}$. Two distinct boxes of the same type have the same number $r\ge1$ of constrained positions (coordinates where the prescribed subset is proper). Among the $r$ constrained positions of the first box, the pigeonhole principle yields a block of $m\ge r/(2^q-1)^2$ positions on which the two boxes share a common ordered subset pair $(S,T)$.
+
+Under a uniform word, the distance to the first box on this block has distribution $j\sim\operatorname{Bin}(m,p)$, where $p=1-|S|/q\in[1/q,1-1/q]$. Outside this block, the pair of distances to the two boxes takes at most $(n+1)^2$ possible values; we fix a most probable pair of off-block contributions $(c_1,c_2)$, which restricts us to an event of probability mass at least $1/(n+1)^2$, at cost at most a factor $(n+1)^2$ in mass. When $S=T$, the two boxes agree on the chosen block, so we must ensure their total distances differ; we reserve one discrepant coordinate outside the block before fixing the remaining off-block contributions, and then fix the letter at that coordinate so that $c_1\ne c_2$. This costs at most another factor $q$ in mass, because for two distinct nonempty subsets the difference of their membership indicators cannot be constant over $[q]$.
+
+Within the block, we restrict attention to the consecutive integers $j\in[0,m]$ satisfying $|j-mp|\le1+\beta\min(m,\sqrt{m\Lambda})$, where $\beta$ is a small positive constant depending only on $q$. The number $W$ of such values of $j$ is at least two and at least $c_q\min(m,\sqrt{m\Lambda})$. Each such $j$ has binomial probability mass $\ge\exp(-\Lambda/4-O_q(\log n))$. Indeed, the atom at $j$ under parameter $j/m$ is modal and therefore has probability at least $1/(m+1)$, and changing the binomial parameter from $j/m$ to $p$ multiplies this probability by $\exp(-mD(j/m\Vert p))$, where the relative entropy satisfies $D(x\Vert p)\le (x-p)^2/[p(1-p)]$. Choosing $\beta$ sufficiently small ensures that $mD(j/m\Vert p)$ is at most $\Lambda/4$.
+
+\step{Constructing a forest of distance-pair cells.}
+We next associate to each $j$ in the window an oriented edge from the distance to the first box to the distance to the second box, corresponding to a cell of words with that distance pair. When $S=T$, the two boxes have identical distances on the block, so the level pairs $(j+c_1,j+c_2)$ with $c_1\ne c_2$ directly form a forest of fixed-shift paths.
+
+Otherwise, when $S$ and $T$ are distinct, set $p_1=|S^c\setminus T|/|S^c|$, $p_0=|S\setminus T|/|S|$, and $b_k(u)=\min(k,\lfloor(k+1)u\rfloor)$, which gives a mode of a binomial distribution with $k$ trials and success probability $u$. Conditional on the first block distance $j$, each of the $j$ block coordinates outside $S$ falls outside $T$ with probability $p_1$, and each of the $m-j$ block coordinates inside $S$ falls outside $T$ with probability $p_0$. Hence the second block distance is a sum of two independent binomial random variables with parameters $(j,p_1),(m-j,p_0)$. Fixing each of these two binomials to its mode restricts us to a cell at only a polynomial cost in mass (at most a factor $(n+1)^2$), and defines a map sending the first box distance $j+c_1$ to the second box distance $b_j(p_1)+b_{m-j}(p_0)+c_2$.
+
+This map is 1-Lipschitz in $j$, because incrementing the trial count of a binomial distribution by one changes its mode by either zero or one. On any periodic orbit, a 1-Lipschitz map (a nonexpansion) must be an isometry, as one sees by iterating the map around the orbit; on the integer line, the only isometries of a finite set are the identity and a reversal, so every cycle has length at most two. Moreover, the number of loops (fixed points of the map) is $O_q(1)$, because the fixed-point equation is affine in $j$ up to bounded rounding error, with slope $p_1-p_0-1$ bounded away from zero: having $p_1=1,p_0=0$ would imply $S=T$, which is excluded in this case.
+
+We now delete all loops and, for each 2-cycle (doubled edge), retain only one of its two orientations. The resulting graph is a forest: every vertex has outdegree at most one, so any undirected cycle of length at least three would have to be a directed cycle, which does not exist. At least $(W-O_q(1))/2$ edges remain. If $W$ is bounded, then $m$, and hence $r$, is bounded for large $n$; in that case we simply reserve any single discrepant coordinate between the two boxes and fix all other coordinate contributions to a modal pair, after which a suitable choice of letter at the discrepant coordinate yields at least one nonloop cell of mass at least $1/[q(n+1)^2]$.
+
+\step{Collision probability and union bound.}
+The cells corresponding to the retained forest edges are disjoint subsets of words, each of uniform probability mass at least $\exp(-\Lambda/4-O_q(\log n))$. Because landmarks are sampled independently with expected total count $K=e^{\Lambda}$, the number of landmarks falling in each retained cell is an independent binomial random variable of mean $\ge\exp(3\Lambda/4-O_q(\log n))$. By the binomial maximal-atom bound, the probability that any single cell count equals a prescribed integer is $\le e^{-c_q \Lambda}$.
+
+Now condition on all landmark selections outside the retained cells. The difference between the two distance histograms equals a fixed vector (determined by the exterior landmarks) plus the oriented incidence matrix of the forest applied to the vector of independent cell counts. Eliminating leaves iteratively shows that the oriented incidence matrix of any forest has full column rank, so equality of the two histograms requires the vector of cell counts to equal at most one particular vector. Multiplying the maximal-atom bounds over all retained edges gives a collision probability of at most
+\[
+ \exp\{-c_q \Lambda\min(r,\sqrt{r\Lambda})\}.
+\]
+
+It remains to sum this bound over all ordered pairs of distinct boxes of the same type with $r$ constrained positions. There are at most $(e(2^q-2)n/r)^{2r}$ ordered pairs at level $r$. For $r\le \Lambda$, the exponent $c_q \Lambda r$ dominates the logarithm of this pair count. For $r>\Lambda$, the exponent is $c_q A^{3/2}\sqrt{nr}$, and the ratio of the log pair count to $\sqrt{nr}$ is controlled by $\sqrt{r/n}\log(e(2^q-2)n/r)$, which is uniformly bounded. Taking $A$ sufficiently large in terms of $q$ makes the union bound over all levels $r\ge1$ equal to $o(1)$. Level zero consists of the single unconstrained box, so it produces no pairs. Finally, $N\le2K$ holds with high probability, giving the upper bound on the number of landmarks. Singleton boxes give the matching lower bound order by the vertex lower bound in Appendix~\ref{app:entropy}.
+
+\section{Robust histograms and lower bounds from types}
+We now extend the analysis to noisy observations in which an adversary may corrupt up to $E$ entries of the distance histogram. Put $E=\lfloor e^{Bs}\rfloor$ with $B\ge0$ (recalling $s=n^{1/3}$), and separately allow the noiseless case $E=B=0$.
+
+For two histograms of equal total mass, the replacement distance is $d(H,H')=\|H-H'\|_1/2$, since each single replacement moves one unit from a surplus bin to a deficient bin. Consequently, the radius-$E$ balls around two histograms intersect if and only if $d\le2E$, as one sees by splitting a shortest path of replacements at its midpoint. Moreover, if some readings are deleted rather than replaced, padding the deleted readings back up to the known original mass with arbitrary distances costs at most one replacement per deletion. Thus a recovery guarantee against replacements automatically covers combined deletions and replacements as well.
+
+\subsection{Uniform robust resolution}\label{sec:robust-forest}
+In this subsection we show that the random landmark sample separates all coordinate boxes up to $E$ adversarial replacements whenever $D=A-2B$ is sufficiently large in terms of $q$. The proof adapts the forest construction by summing the histogram difference across forest cuts and verifies that the moment gap between different types survives the perturbation.
+
+Write $D=A-2B$ and take $\Lambda=Ds$. Running the forest construction of Section~\ref{sec:box-forest} with this parameter $\Lambda$, the actual expected landmark counts in the retained cells are now at least $\exp(As-\Lambda/4-O_q(\log n))$, because the landmark sampling rate still has exponent $As$.
+
+Consider any edge of the forest. Deleting that edge splits its connected tree into two parts. Summing the entries of the histogram difference over all vertices on one side of the cut cancels every other forest edge (each edge wholly inside that side contributes $+1$ and $-1$, while edges on the other side contribute $0$), leaving only the signed landmark count on the deleted edge plus a fixed term determined by the exterior landmarks. If $d\le2E$, then the $\ell_1$ norm of the histogram difference is at most $4E$, and because the entries of the histogram difference sum to zero, the absolute value of the sum over any subset of vertices is at most $2E$.
+
+Conditional on the exterior landmarks, each independent cell count on a forest edge is therefore confined to an interval of at most $4E+1$ integers. By the binomial maximal-atom bound, the probability of landing in this interval is at most $\exp(-3\Lambda/8+O_q(\log n))$. Multiplying these probabilities over all edges of the forest and applying the same pair enumeration as in the noiseless case proves uniform separation within each type for $D>D_0(q)$ sufficiently large.
+
+For boxes of different types, a perturbation with $d\le2E$ changes the empirical raw moment of order $j$ by at most $2En^j/N$. On the high-probability event $N\ge K/2$, this perturbation is exponentially small in $s$, so the fixed population cumulant gap still precludes confusion between different types. In particular, one may take $B=(1/2-\varepsilon)A$ for any $0<\varepsilon<1/2$ and sufficiently large $A$.
+
+\subsection{Type entropy and typical histograms}
+We next establish lower bounds on the sampling exponent $A$ for both deterministic and random landmark sets. The idea is to fix a box type with large combinatorial entropy and bound how many distinguishable quantized histograms it can generate.
+
+\step{Distance distribution for a uniform box of fixed type.}
+For a type fraction vector $\alpha=(\alpha_1,\ldots,\alpha_q)$, specifying the limiting proportion of coordinates whose prescribed subset has each size $a$, set
+\[
+ p_a=1-a/q,\quad h=-\sum_a\alpha_a\log\alpha_a+
+ \sum_a\alpha_a\log\binom qa,
+\]\[
+ v=\sum_a\alpha_a p_a(1-p_a),
+ \qquad C_{\rm box}(q)=\sup_{v>0}\left(\frac{3h}{4\sqrt{2v}}\right)^{2/3}.
+\]
+Round the type counts to integers summing to $n$; by Stirling's approximation, there are $\exp(hn+O_q(\log n))$ boxes of this type.
+
+For a uniformly random box of this type, the distance from any fixed word has the same distribution $W$: conditional on which coordinates are assigned each subset size, the random subsets at those coordinates are chosen independently, and the resulting Bernoulli sum law does not depend on the coordinate assignment. Write $\pi_j=\Pr(W=j)$ and $\mu=\mathbb EW$. The variance of $W$ is $nv+O(1)$. Inside the central window $|j-\mu|\le Mn^{2/3}$, applying the Chernoff bound with exponential tilt parameter $t=(j-\mu)/\mathrm{Var}(W)$ and cubic remainder $O(n|t|^3)=O(1)$ yields $\log\pi_j\le-(j-\mu)^2/(2nv)+O(1)$. Outside this window, Hoeffding's inequality gives $\pi_j\le2e^{-2M^2s}$, where we take $M$ large relative to $A$.
+
+\step{Deterministic lower bound via entropy.}
+To account for adversarial replacements, set the quantization width $w=1+\lfloor4E/(n+1)\rfloor$. If two histograms have the same coordinatewise floors $\lfloor H/w\rfloor$, then each of their $n+1$ bins differs by at most $w-1$, which implies $\|H-H'\|_1\le4E$ and hence intersecting radius-$E$ balls.
+
+Consider any deterministic set of $k=\exp((A+o(1))s)$ landmarks, and feed a uniformly random box of the fixed type into it. In bin $j$, the floored count has mean at most $u=k\pi_j/w$, and therefore Shannon entropy at most $g(u)=(1+u)\log(1+u)-u\log u$, by comparison to the geometric distribution, which maximizes entropy among nonnegative integer random variables of a given mean. We bound $g(u)\le\log_+u+2$ inside the central window and $g(u)=O(u(1+|\log u|))$ for small $u$ outside the window. Since $\log w=Bs+o(s)$, subadditivity of entropy over the bins and passing to the Riemann sum in the rescaled variable $x=(j-\mu)/n^{2/3}$ bound the normalized entropy of the floored histogram by
+\[
+ \int_{\mathbb R}[A-B-x^2/(2v)]_+\,dx+o(1)
+ =\tfrac43\sqrt{2v}[A-B]_+^{3/2}+o(1).
+\]
+For the floored histogram map to be injective on the type, this normalized entropy must be at least $h+o(1)$. Taking the supremum over types yields $A-B\ge C_{\rm box}(q)$.
+
+\step{Random converse via typical histograms.}
+For independent random landmark sampling with expected count $K=e^{As}$, let $\lambda_j=K\pi_j$ be the expected count in bin $j$ for a fixed box of the chosen type. Since each bin count is a binomial random variable, its variance is at most $\lambda_j$. Applying Markov's inequality to the total count outside the central window and Chebyshev's inequality to each bin inside the window shows that, for any given box, with probability $1-o(1)$ all outside counts vanish and each inside count differs from its mean by at most $n^2\max(1,\sqrt{\lambda_j})$.
+
+By Markov's inequality over the random landmark sample, at least half of all boxes of the chosen type satisfy this typicality event with high probability. For such typical boxes, the floored histograms have $O(1+n^2\max(1,\sqrt{\lambda_j})/w)$ possible values in each inside bin. The polynomial factors contribute only $O(n^{2/3}\log n)=o(n)$ to the logarithm of the total number of typical floored histograms. Evaluating the remaining sum as a Riemann integral bounds the normalized log count above by
+\[
+ \int_{\mathbb R}[A/2-B-x^2/(4v)]_+\,dx+o(1)
+ =\tfrac23\sqrt{2v}[A-2B]_+^{3/2}+o(1).
+\]
+Whenever this quantity is strictly below $h$, the pigeonhole principle forces collisions among typical boxes and precludes recovery. Thus $A-2B<2^{2/3}C_{\rm box}(q)$ implies failure with high probability.
+
+\step{The binary case and separation from vertices and edges.}
+In the binary case ($q=2$), write $\rho$ for the fraction of constrained coordinates. Then $v=\rho/4$ and the type entropy is $h_{\rm face}(\rho)=-\rho\log\rho-(1-\rho)\log(1-\rho)+\rho\log2$. The sign of the derivative $(h_{\rm face}/\sqrt\rho)'$ matches that of $2\rho h_{\rm face}'-h_{\rm face}$. Differentiating the latter gives $\log(2(1-\rho)/\rho)-2/(1-\rho)$, which decreases strictly from $+\infty$ to $-\infty$ on $(0,1)$. Since $2\rho h_{\rm face}'-h_{\rm face}$ starts at zero at $\rho=0$ and tends to $-\infty$ as $\rho\to1$, the ratio $h_{\rm face}/\sqrt\rho$ attains its unique maximum at $\rho\simeq0.3655138962$.
+
+At this maximizer we obtain $C_{\rm box}(2)\simeq1.3658580$, giving the random converse threshold $2.1681644\ldots$. For every alphabet size $q$, mixing a small fraction $\eta$ of unconstrained positions into the vertex type strictly increases $h/\sqrt v$, because the entropy gains a term of order $\eta\log(1/\eta)$ while the variance changes only linearly in $\eta$. Already at $\rho=1/2$, the binary converse constant is $(9\log2/2)^{2/3}>2.1$, whereas the vertex and edge success constant is $(3\sqrt2\log2)^{2/3}<2.1$. At $A=2.1$, the same random landmark sample therefore distinguishes all vertices and edges jointly (their population mean distances differ by $1/2$ and concentrate uniformly), yet fails to resolve all boxes with high probability, even without adversarial errors.
+
+\section{The leading first-moment cutoff for binary boxes}\label{sec:face-first}
+In the binary case, coordinate boxes are faces of the binary cube. We now compute the exact exponential growth rate of the expected number of colliding pairs of faces at each codimension, and deduce the resulting first-moment threshold.
+
+Let $Z_r$ count unordered pairs of distinct faces with $r$ fixed positions whose radius-$E$ balls intersect, and let $Z$ count all such pairs across all codimensions, including cross-codimension pairs. For $r/n\to\rho\in(0,1]$ set $a_\rho(D)=\tfrac23\sqrt{\rho/2}[D]_+^{3/2}$. We show that
+\[
+ \lim_{n\to\infty}n^{-1}\log\mathbb E Z_r
+ =\max\{2h_{\rm face}(\rho)-a_\rho(D),\ h_{\rm face}(\rho)-a_\rho(D)/2\}.
+\]
+The two terms inside the maximum reflect the competition between generic pairs of faces and pairs with nearly opposite prescriptions on the same support. Consequently, $\mathbb E Z\to0$ above, and grows exponentially below,
+\[
+ C=\max_{0<\rho\le1}\left(\frac{3h_{\rm face}(\rho)}{\sqrt{\rho/2}}\right)^{2/3}
+ =3.4417465206\ldots
+\]
+as a cutoff in $D=A-2B$. Above $C$, Markov's inequality immediately gives recovery with high probability. This first-moment computation alone gives no converse. Theorems~\ref{thm:face-wHP} and~\ref{thm:noisy-face} prove the converse and determine the equality behavior at their specified sampling scales.
+
+\subsection{Upper rates at positive limiting codimension}\label{sec:face-modal}
+To prove the upper bound on $n^{-1}\log\mathbb E Z_r$, we decompose any pair of distinct faces of codimension $r$ according to how their supports overlap. Depending on whether the overlap is balanced, nearly identical, or nearly opposite, we construct a forest of disjoint distance-pair cells and evaluate the resulting Riemann sum.
+
+\step{Balanced overlap.}
+Given two distinct faces with $r$ fixed positions each, split their supports into a block of $a$ common coordinates where their prescribed bits agree, a block of $b$ common coordinates where their prescribed bits are opposite, and two exclusive blocks (each constrained in only one face) of size $c$ each, so that $r=a+b+c$.
+
+Condition on the distance $j$ from a random word to the first face; the mismatches to the first face then form a uniformly random $j$-subset of its $r$ constrained coordinates. Fix the mismatch count $x$ on the agreeing block to a hypergeometric mode, fix the mismatch count $y$ on the opposite block to a conditional hypergeometric mode given $x$, and fix the mismatch count on the second face's exclusive block to $\lfloor c/2\rfloor$. Each of these three restrictions retains a modal outcome out of at most $n+1$ possibilities, so together they cost at most a factor $(n+1)^3$ in conditional probability mass.
+
+Recall that the hypergeometric mode for population size $P$, marked count $M$, and $k$ draws differs from the mean $kM/P$ by $O(1)$ (specifically, one may use $\lfloor(k+1)(M+1)/(P+2)\rfloor$). Since $a=r$ would make the two faces identical and $b/(r-a)\le1$, substituting these modal values into the second face's distance gives
+\[
+ j'=x+b-y+\lfloor c/2\rfloor,\qquad
+ j'-r/2=\frac{a-b}{r}(j-r/2)+O(1).
+\]
+Fix a small parameter $\delta>0$. When $a,b\le(1-\delta)r$, the factor $(a-b)/r$ has absolute value at most $1-\delta$, so this map strictly decreases $|j-r/2|$ outside a bounded central window around $r/2$. The resulting oriented edges $(j,j')$ therefore form a forest: in any undirected cycle, a radially outermost vertex (one maximizing $|j-r/2|$) would need two edges going inward, hence outdegree at least two, which is impossible because each vertex has outdegree at most one.
+
+For bounded rescaled coordinate $z=(j-r/2)/n^{2/3}$, Stirling's approximation gives cell means at least $\exp((A-z^2/(2v_n))s-O(\log n))$, where $v_n=r/(4n)$, uniformly for $r/n$ bounded away from zero. As in the robust forest argument above, each cut of the forest constrains its edge count to an interval of length at most $4E+1$, costing at most the smaller of one and $4E+1$ times the maximal atom (or a single atom when $E=0$). Summing the log-probabilities over the central window gives a Riemann sum of $[D/2-z^2/(4v_n)]_+$, yielding a collision probability $\le\exp(-a_\rho(D)n+o(n))$. For $D\le0$, we simply use the trivial probability bound of one.
+
+\step{Nearly identical and nearly opposite pairs.}
+When $a>(1-\delta)r$, we instead treat the agreeing block as our main block and fix the off-block contributions at their classwise binomial modes, reserving one discrepant coordinate outside the agreeing block. Toggling the bit at that discrepant coordinate changes the difference of the two distances by one (if the coordinate is exclusive) or by two (if it is opposite), so one choice of bit yields unequal offsets. Varying the mismatch count on the agreeing block then gives a forest of fixed-shift paths, and the Riemann sum yields the full integral with $a$ in place of $r$.
+
+When $b>(1-\delta)r$, we treat the opposite block as our main block and fix the agreeing count and both exclusive counts at their lower central modes. The two off-block offsets $u$ then coincide, and pairing mismatch counts $k$ and $b-k$ on the opposite block yields edges $(k+u,b-k+u)$ for $k<b/2$. These edges form a matching (hence a forest) of half the window size, giving half the integral with $b$ in place of $r$. In both extreme regimes, all fixed off-block contributions cost only polynomial factors in $n$.
+
+To sum over all pairs, count the near-opposite choices first. Given the first face and the number $t=r-b\le\delta r$ of coordinates where the second face does not prescribe the opposite bit, there are at most $\binom rt\binom tc\binom{n-r}c2^c$ choices for the second face: mark the $t$ exceptions to opposite bits among the $r$ constrained coordinates, choose $c$ of them to omit from the second support, and prescribe $c$ replacement positions and bits outside the first support. Summing over all $t\le\delta r$ and $c\le t$ costs at most $\exp(O(\delta\log(1/\delta))n+o(n))$ per first face. All other pairs (balanced or near-identical) number at most the square of the total face count. Combining the pair counts with the collision probabilities and letting $\delta\downarrow0$ yields the asserted maximum as an upper bound.
+
+\subsection{Matching lower rates}
+We now establish both matching lower bounds on $n^{-1}\log\mathbb E Z_r$. For general pairs of faces of codimension $r$, we construct a cube isometry that expresses the histogram difference as the difference of two independent identically distributed random vectors and apply Cauchy--Schwarz; for exactly opposite pairs on the same support, we exploit reflection symmetry and independence across distance shells.
+
+\step{General pairs.}
+Any two faces with the same number $r$ of fixed positions are exchanged by an involutive isometry of the binary cube: flip the coordinates where both faces have conflicting prescriptions, pair up the two exclusive blocks and swap the coordinates in each pair, and flip both bits in a swapped pair whenever the two prescribed bits differ. Under this involution, every word either is neutral (having equal distance to both faces) or belongs to a nonneutral two-word orbit.
+
+On each nonneutral two-word orbit, choose one representative with histogram contribution $e_j-e_{j'}$; its partner then contributes the negative. Because landmarks are sampled independently, the histogram difference has the same law as $X-X'$, where $X$ and $X'$ are independent and identically distributed sums of signed vectors. Each coordinate $j$ of $X$ has variance at most $\lambda_j=K\Pr(\operatorname{Bin}(r,1/2)=j)$, because each orbit contributing to coordinate $j$ contains a distinct word at distance $j$ from the first face.
+
+Summing the shell means outside the central window shows that the probability of any nonzero outside-window contribution is $o(1)$. Inside the window, Chebyshev's inequality simultaneously confines every coordinate of $X$ to its mean plus or minus $n^2\max(1,\sqrt{\lambda_j})$ with probability $1-o(1)$. Quantize each coordinate by $w=1+\lfloor2E/(r+1)\rfloor$; if $X$ and $X'$ have equal coordinatewise floors, then $\|X-X'\|_1\le2E$, which is sufficient for the radius-$E$ balls around the two histograms to intersect.
+
+By the preceding Riemann sum calculation, the logarithm of the number of typical quantized vectors is at most $a_\rho(D)n+o(n)$. By Cauchy--Schwarz, the probability that $X$ and $X'$ land in the same typical quantization bin is at least the squared probability of the typical event divided by the number of typical quantizations. Because this lower bound is uniform over all pairs of faces of codimension $r$, multiplying by the total number $\binom{\binom nr2^r}{2}$ of unordered pairs gives the lower rate $2h_{\rm face}-a_\rho$.
+
+\step{Opposite pairs.}
+Now consider a pair of faces with exactly opposite prescriptions on the same support of size $r$. Their distance histograms are exact reflections of each other: a word at distance $j$ from the first face is at distance $r-j$ from the second. Because the distance shells are disjoint, shell counts at distinct indices are independent, and reflected pairs of shell counts are identically distributed.
+
+To force a collision, require both tails outside the central window to be empty (which occurs with probability $1-o(1)$), and for each reflected pair of inside indices require their quantized counts (with width $w$) to be equal. By Chebyshev's inequality, each shell count lies within $2\max(1,\sqrt{\lambda_j})$ of its mean with probability at least $3/4$, so by Cauchy--Schwarz the probability that two independent identically distributed counts fall in the same quantization bin is at least $(3/4)^2$ divided by the number of quantization bins intersecting that interval. Multiplying over half the inside indices costs $\exp(-a_\rho(D)n/2-o(n))$, while the middle shell (when $r$ is even) is invariant under reflection and therefore neutral. Since there are exactly $\binom nr2^r/2$ opposite pairs, this yields the second lower rate.
+
+\subsection{Summing codimensions}\label{sec:sum-codim}
+We now sum the collision expectations over all codimensions and include cross-codimension pairs to establish the cutoff at $C$ for $\mathbb E Z$.
+
+First suppose $D>C$, and fix a small constant $\varepsilon>0$. For large codimensions $r\ge\varepsilon n$, the upper-rate argument gives uniform exponential decay: the limiting rate has a strict negative margin on the compact interval $[\varepsilon,1]$, and the loss from passing to a shorter block vanishes uniformly as $\delta\to0$.
+
+For small codimensions $r<\varepsilon n$, we apply the robust forest estimate $\exp(-c\Lambda\min(r,\sqrt{r\Lambda}))$ with $\Lambda=Ds$. There are at most $(2en/r)^{2r}$ pairs at codimension $r$. When $r\le \Lambda$, the exponent $c\Lambda r$ beats the logarithm of $(2en/r)^{2r}$. When $\Lambda<r<\varepsilon n$, the exponent $cD^{3/2}\sqrt{nr}$ dominates the log pair count for small enough $\varepsilon$, since $\sup_{0<x<\varepsilon}\sqrt x\log(2e/x)\to0$ as $\varepsilon\to0$. Both sums over $r$ therefore vanish as $n\to\infty$.
+
+For pairs of faces with different codimensions, the population mean distances differ by at least $1/2$. The uniform Bernstein bound in Section~\ref{sec:different-box-types} fails with probability at most $\exp(-K/\mathrm{poly}(n))$, and on its complementary good event, adversarial replacements shift the empirical mean by at most $2En/N=o(1)$, which cannot close the gap of $1/2$. Even after multiplying by the total number of face pairs, this exceptional probability vanishes, so $\mathbb E Z\to0$.
+
+Finally, when $D<C$, we simply choose a fixed limiting fraction $\rho$ at which the lower rate is strictly positive; the corresponding codimension alone makes $\mathbb E Z$ grow exponentially. Notice that the maximizing fraction in the definition of $C$ is the same unique maximizer of $h_{\rm face}/\sqrt\rho$ determined in the binary type-entropy analysis above.

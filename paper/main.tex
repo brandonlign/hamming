@@ -1,0 +1,204 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{corollary}[lemma]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[lemma]{Definition}
+\newtheorem{remark}[lemma]{Remark}
+\DeclareMathOperator{\Bin}{Bin}
+\DeclareMathOperator{\Bern}{Bern}
+\newcommand{\prob}{\mathbb P}
+\newcommand{\ex}{\mathbb E}
+\newcommand{\whp}{with probability tending to one}
+\newcommand{\step}[1]{\par\medskip\noindent\textit{#1}\enspace}
+\setlength{\emergencystretch}{2em}
+
+\hypersetup{pdftitle={Sharp thresholds for anonymous recovery in Hamming graphs},pdfauthor={Brandon Li}}
+\title{Sharp thresholds for anonymous recovery in Hamming graphs}
+\author{Brandon Li\\[0.35em]
+ \normalsize Great Neck, New York, USA\\[0.2em]
+ \normalsize \href{mailto:brandon.li.gn@gmail.com}{\nolinkurl{brandon.li.gn@gmail.com}}}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+Suppose a set of landmarks reports its distances to an unknown query in a Hamming graph, but the readings are unlabeled, so one observes only the distance histogram rather than which landmark produced which distance. We study how many randomly chosen landmarks are needed to identify every query in a given family simultaneously. For the binary cube, we determine the random sample size needed to distinguish all faces, both without errors and under adversarial reading errors. The leading threshold is \(e^{Cn^{1/3}}\) with \(C=3.4417465\ldots\), and an adversarial error budget of \(e^{Bn^{1/3}}\) multiplies this exponential scale by \(e^{2Bn^{1/3}}\). At the next scale, the critical polynomial factors are \(n^{1/2}\) in the noiseless model and \(n^{-5/6}\) under an exponential error budget. We determine the sharp multiplicative cutoffs in both regimes and prove that recovery fails at equality. Above the threshold, for any fixed strict excess in the leading exponent, almost every remaining failure is caused by faces that fix only one or two coordinates; a simple filter removes those configurations and doubles the logarithmic decay rate of the failure probability.
+
+For general Hamming graphs over a fixed alphabet, we establish stretched-exponential bounds for the joint recovery of all coordinate boxes and for the classical vertex, outer-vertex, and edge multiset dimensions. For each of these three classical query families, we prove the exact sparse Bernoulli threshold, including the sharp prefactor and failure at equality. For vertices and edges, we also locate the narrower critical windows and obtain the limiting recovery probabilities over every fixed alphabet. The corresponding collision counts converge to Poisson limits, with a factor-of-two doubling in the binary case caused by complement symmetry. All of these classical thresholds and finer limits carry over to a uniformly chosen landmark set of exactly the specified size.
+\end{abstract}
+
+\noindent\textit{Keywords}: Hamming graphs, hypercube, multiset dimension, resolving sets, random landmarks, sharp thresholds, Poisson approximation
+
+\noindent\textit{Mathematics Subject Classification}: 05C12, 05C80, 60C05
+
+\section{Anonymous measurements}
+In many localization and sensor-network problems, a collection of landmarks measures distances to an unknown target, and the observer must identify the target from those readings. When each sensor is labeled, a measurement is an ordered vector with one coordinate for each landmark. In the anonymous setting, landmark identities are stripped away, so the observer receives only the multiset, or histogram, of distances, with one coordinate for each possible distance value. Resolving sets for anonymous measurements are studied in graph theory under the name of multiset dimension; see the recent survey \cite{FKKY}. We ask how many landmarks are needed so that a single landmark set distinguishes every query in a prescribed family simultaneously.
+
+We work in the Hamming graph \(H(n,q)\), whose vertices are words in \([q]^n\) and whose edges join pairs of words that differ in exactly one coordinate. For any nonempty set \(T\) of query vertices (such as a single vertex, an ordinary edge, or a coordinate box), the distance from a vertex to \(T\) is \(d(v,T)=\min_{t\in T}d_H(v,t)\). A landmark set \(S\subseteq[q]^n\) assigns to \(T\) the distance histogram
+\[
+h_S(T)_r=\#\{v\in S:d(v,T)=r\},\qquad 0\le r\le n.
+\]
+A coordinate box is a Cartesian product \(\prod_{i=1}^n T_i\) in which every factor \(T_i\subseteq[q]\) is nonempty. When \(q=2\), the coordinate boxes are precisely the faces of the binary cube, and the codimension of a face is the number of coordinates whose bit values it prescribes.
+
+To illustrate how distinct faces can collide under anonymous measurements, consider the three landmarks \(000,101,111\) in the three-dimensional binary cube. The face fixing \(x_1=1,x_3=0\) and the face fixing \(x_1=0,x_3=1\) both produce the histogram \((0,3,0,0)\), because each landmark matches exactly one of the two prescribed bits of either face and therefore lies at distance one from both.
+
+Throughout the paper, landmark sets are unweighted and contain no repeated vertices, and the empty set does not resolve. In our random model, each vertex of the Hamming graph is included independently in \(S\) with probability \(m/q^n\), so that \(m=\ex|S|\) is the specified expected size. The alphabet size \(q\ge2\) is held fixed as the dimension grows, and all logarithms are natural.
+
+\paragraph{Main contributions.}
+This paper establishes four main results. First, we determine the sharp random threshold for distinguishing all \(3^n\) faces of the binary cube, both in the noiseless model and under adversarial reading errors, including the critical polynomial multipliers and exact multiplicative cutoffs at the second scale. Second, we identify which faces drive the rare failures that persist above the threshold, showing that they differ from the faces that govern the threshold itself and that a simple filter doubles the logarithmic decay rate of the failure probability. Third, for every fixed alphabet, we prove sharp sparse thresholds for vertices, outer vertices, and edges, and for vertices and edges we also find the finer critical windows and the limiting recovery probabilities. All of these results hold for uniformly chosen landmark sets of a fixed size as well. Fourth, we determine the deterministic order \(\exp(\Theta(n^{1/3}))\) for the classical vertex, outer-vertex, and edge multiset dimensions of Hamming graphs, as well as for joint resolution of all coordinate boxes.
+
+\section{Binary faces: thresholds and rare failures}
+To model adversarial noise, we call two distance histograms confusable at error budget \(E\) if an adversary can make them coincide by replacing at most \(E\) readings in each histogram. Because every query produces a histogram whose total mass equals the number of landmarks, two histograms of the same total mass are confusable at budget \(E\) if and only if half their \(\ell^1\) distance is at most \(2E\).
+
+Permitting deletions alongside replacements within the same total budget does not change which pairs are confusable. Indeed, for two corrupted outputs to coincide they must have the same total mass, which forces the adversary to delete the same number \(d\) of readings from each side. Appending \(d\) identical common readings to both outputs converts those deletions into replacements without exceeding the budget.
+
+\begin{theorem}[Binary box first moment]\label{thm:box}
+Suppose \(q=2\) and \(m=e^{A n^{1/3}}\), where \(A>0\). Let \(E=\lfloor e^{B n^{1/3}}\rfloor\) for a fixed \(B\ge0\), or set \(E=0\) and \(B=0\) in the noiseless case. Put \(D=A-2B\) and
+\[
+ h_{\rm face}(\rho)=-\rho\log\rho-(1-\rho)\log(1-\rho)+\rho\log2,
+ \qquad
+ a_\rho(D)=\tfrac23\sqrt{\rho/2}\,\max(D,0)^{3/2}.
+\]
+Use the continuous convention \(0\log 0=0\). For \(r/n\to\rho\in(0,1]\), let \(Z_r\) count unordered confusable pairs of codimension-\(r\) faces. Then
+\[
+\lim_{n\to\infty} n^{-1}\log\ex Z_r
+=\max\{2h_{\rm face}(\rho)-a_\rho(D),\ h_{\rm face}(\rho)-\tfrac12a_\rho(D)\}.
+\]
+The expected number of confusable pairs among all faces tends to zero for
+\[
+D>\max_{0<\rho\le1}\Bigl(3h_{\rm face}(\rho)/\sqrt{\rho/2}\Bigr)^{2/3}=3.4417465\ldots
+\]
+and grows exponentially for \(D\) below this constant. In particular all faces are distinguished \whp{} above the cutoff. Theorems~\ref{thm:face-wHP} and~\ref{thm:noisy-face} give matching probability cutoffs, with distinct equality conclusions for noiseless and exponentially noisy sampling.
+\end{theorem}
+
+\subsection{Recovery probabilities}
+Let \(C\) denote the exact threshold constant from Theorem~\ref{thm:box}. While Theorem~\ref{thm:box} locates the first-moment transition, Theorems~\ref{thm:face-wHP} and~\ref{thm:noisy-face} establish the actual probability thresholds for recovery. For a fixed parameter \(A>0\) and expected landmark count \(m=e^{An^{1/3}}\), they yield the following phase diagram:
+\[
+\begin{array}{c|c|c}
+\text{Error budget} & \text{Recovery with high probability} &
+                        \text{Failure with high probability} \\
+\hline
+0\ \text{or fixed} & A>C & A\le C \\
+\lfloor e^{Bn^{1/3}}\rfloor,\ B>0 & A-2B\ge C & A-2B<C .
+\end{array}
+\]
+
+At equality in the leading exponent, the behavior depends on the exact polynomial factor multiplying the exponential scale. Theorem~\ref{thm:face-window} resolves this second scale when the expected sample size is written as \(\kappa n^\beta\) times the exponential threshold. The critical polynomial exponent is \(\beta=1/2\) for noiseless measurements and \(\beta=-5/6\) for an exponentially growing error budget: recovery fails with high probability below the separating exponent and succeeds above it. At the critical exponent itself, the sharp multiplicative cutoff is \(\kappa_*=0.0602978769\ldots\) in the noiseless case, and Theorem~\ref{thm:noiseless-exact} shows that recovery still fails at equality. In the noisy case, the sharp multiplicative cutoff is \(\kappa_{\rm noise}=11.333347057\ldots\), and Theorem~\ref{thm:noisy-exact} proves failure at equality there as well. Notice that equality behaves differently in the two rows of the table, failing in the noiseless regime and succeeding in the noisy regime. This reversal is explained by counting the admissible error vectors under a single total budget across the histogram, rather than under separate budgets in each bin.
+
+\subsection{Which failures remain above the cutoff?}
+When the leading exponent strictly exceeds the binary box cutoff by a fixed amount, two different geometric regimes govern the threshold transition and the residual failure probability. The expectation switch at the threshold is controlled by faces that fix about \(36.55\%\) of the coordinates. Above the cutoff, however, those intermediate faces contribute negligibly, and the remaining failure probability is asymptotic to \(n(n-1)(4E+1)/\sqrt{\pi m}\), which comes almost entirely from faces fixing only one or two coordinates. Applying a simple signed-coordinate filter eliminates those low-codimension failures and doubles the logarithmic decay rate of the failure probability; see Corollary~\ref{cor:rare-faces}.
+
+\section{General Hamming graphs}
+We now turn from binary faces to general Hamming graphs over a fixed alphabet of size \(q\ge2\) and to the three classical query families: all vertices, outer vertices (vertices lying outside the landmark set), and ordinary edges. Write \(D_n^V,D_n^O,D_n^E\) for the minimum number of landmarks required to distinguish all queries in these three families, respectively, with the convention that the minimum over an empty collection of resolving sets is infinite. For a random landmark set, write \(Z^V,Z^O,Z^E\) for the corresponding numbers of unordered colliding pairs in each family.
+
+To state the sharp thresholds, set \(L=\log q\) and \(\sigma^2=(q-1)/q^2\), and define
+\[
+a(A)=\frac23\sqrt{2\sigma^2}\,A^{3/2},
+\qquad C_q=\left(\frac{3\log q}{\sqrt{2\sigma^2}}\right)^{2/3}.
+\]
+By construction, the constant satisfies \(a(C_q)=2L\). The thresholds stated below govern sparse Bernoulli landmark sets sampled at these prescribed scales. Note that multiset resolution is not monotone under adding landmarks: taking the entire vertex set as landmarks, for instance, assigns the exact same distance histogram to every vertex, and likewise assigns the exact same histogram to every ordinary edge.
+
+\begin{theorem}[Deterministic order and joint box resolution]\label{thm:order}
+For each \(D_n\in\{D^V_n,D^O_n,D^E_n\}\),
+\[
+\frac{C_q}{4^{2/3}}
+ \le \liminf_{n\to\infty}\frac{\log D_n}{n^{1/3}}
+ \le \limsup_{n\to\infty}\frac{\log D_n}{n^{1/3}}
+ \le C_q.
+\]
+For each \(A>C_q\), independent inclusion with expected landmark count \(e^{A n^{1/3}}\) resolves the three families within each type \whp. If \(A\) is sufficiently large in terms of \(q\), the same construction jointly resolves all \((2^q-1)^n\) coordinate boxes \whp. The minimum size for that stronger problem is also \(\exp(\Theta_q(n^{1/3}))\). For binary boxes the sharp random scale was given above.
+\end{theorem}
+
+\begin{theorem}[Exponential failure rate]\label{thm:failure}
+Under independent inclusion with mean \(e^{A n^{1/3}}\), \(A>0\), let \(F\) denote failure to distinguish one of the three original query types. Then
+\[
+\lim_{n\to\infty}\frac1n\log\prob(F)=
+\begin{cases}
+\min\{0,2L-a(A)\},&q\ge3,\\
+\min\{0,L-a(A)/2\},&q=2.
+\end{cases}
+\]
+This applies to each type separately and to their union. For \(A\le C_q\), all three types fail simultaneously \whp. For \(A<C_q\), each collision-count logarithm divided by \(n\) converges in probability to \(2L-a(A)\). The exact probability threshold at \(A=C_q\) is refined below.
+\end{theorem}
+
+\begin{theorem}[Sharp classical probability window]\label{thm:window}
+Fix \(A=C_q\), \(\kappa>0\), and take mean landmark count \(\kappa\sqrt n\,e^{A n^{1/3}}\). Let
+\[
+R=\sqrt{2\sigma^2 A},\quad \kappa_1=\frac{\sigma}{2\sqrt{2\pi}},
+\quad B=R\log(\kappa_1/\kappa).
+\]
+For each original query type, let \(Z\) be its number of unordered collisions and \(F=\{Z>0\}\). Then
+\[
+\begin{aligned}
+\lim_{n\to\infty}n^{-2/3}\log\ex Z&=
+\begin{cases}B,&q\ge3,\\ \max(B,B/2),&q=2,\end{cases}\\
+\lim_{n\to\infty}n^{-2/3}\log\prob(F)&=
+\begin{cases}\min(0,B),&q\ge3,\\ \min(0,B/2),&q=2.\end{cases}
+\end{aligned}
+\]
+For \(\kappa>\kappa_1\), one random set resolves all three types \whp. For \(\kappa\le\kappa_1\), all three types fail simultaneously \whp. More generally, if the prefactor \(\sqrt n\) is replaced by \(n^\beta\) with fixed \(\beta\ne1/2\), success holds for \(\beta>1/2\) and failure holds for \(\beta<1/2\). At equality the normalized log expectations are zero, but each expectation diverges.
+\end{theorem}
+
+
+\subsection{Relation to prior work}
+Farhan, Klav\v{z}ar, Kuziak and Yero \cite{FKKY} pose the problem of determining the multiset dimension parameters of binary hypercubes and record values for small dimensions. Allikvere \cite{Allikvere} classifies when the binary edge multiset dimension is finite and uses distance-level forests to build random resolving sets. In Section 10, Questions 2 and 4 of \cite{Allikvere}, Allikvere asks for the growth rate of the edge multiset dimension of hypercubes and whether sparse landmark sets can improve upon density one half. Theorem~\ref{thm:order} answers both questions: the order is \(\exp(\Theta(n^{1/3}))\), and sparse random landmark sets of that size already resolve with high probability. For binary edges, the same two constants \((3\sqrt2\log2)^{2/3}\) and \((3\sqrt2\log2)^{2/3}/4^{2/3}\) were obtained independently in a public repository posted in October 2026 \cite{GH}. Theorem~\ref{thm:order} extends these bounds to vertices, outer vertices and edges over every fixed alphabet, and Theorem~\ref{thm:window} sharpens the random upper bound to an exact threshold, including the prefactor \(\kappa_1\sqrt n\).
+
+Several adjacent lines of work use related ideas or address different measurement models. Ordinary vertex multiset resolution is equivalent to an ID-coloring, as shown by Hakanen and Yero \cite[Theorem 2.1]{ID}. Eide and Pra{\l}at \cite{EP} analyze sparse landmarks on random graphs via products of clipped binomial atoms; here we apply related probabilistic tools to the different geometry of moderate-deviation distance shells in deterministic Hamming graphs, extending them to control joint collisions and all coordinate boxes simultaneously. In coding theory, the distance histogram of a set appears as a row of the outer distribution matrix \cite{CCM}. By contrast, labeled Hamming resolvability \cite{Laird} and the resolution of sets by landmark-indexed distances \cite{Several} preserve landmark identities, while counting codewords contained in a face \cite{Abdurakhmanov} observes only the distance-zero entry of the histogram; none of these coincides with the anonymous recovery problem studied here.
+
+\subsection{Proof mechanism and organization}
+The stretched-exponential scale emerges from a balance between the entropy of the query family and the information carried by the distance histogram. When the expected number of landmarks \(m\) is exponential in \(n^{1/3}\), the shell counts in the histogram are appreciably populated only within a moderate-deviation band of width on the order of \(n^{2/3}\) around the typical distance. The logarithms of the shell occupancies sum across this band to produce a negative log-probability of order \(n\), which matches the exponential cardinality of the query families.
+
+To prove the upper bounds on the failure probability, we examine vertices at prescribed distances from a pair of queries, which contribute signed increments to the difference of their histograms. Organizing these increments through a forest of distance-level pairs or a descending ordering yields enough counts that can be tested independently. For the binary converse, we restrict attention to collisions between pairs of faces that share the same coordinate support but assign opposite bits on it. We show that their typical joint collision probabilities factor asymptotically as products: the neutral shells localize the relevant Fourier integral, while Walsh orthogonality controls the covariance between pairs. In the noisy model, we introduce a positive Gaussian weight to carry out the relative second-moment comparison.
+
+The rest of the paper is organized as follows. We first develop the coordinate-box geometry and prove the binary face thresholds and rare-failure results; the proofs for the classical vertex, outer-vertex, and edge problems are collected in the appendices.
+
+\subsection{Open questions}
+Three questions remain. First, determine the exact deterministic leading constant in Theorem~\ref{thm:order}; our bounds place it between \(C_q/4^{2/3}\) and \(C_q\).
+
+Second, determine the sharp random threshold for jointly resolving all coordinate boxes when \(q\ge3\), analogous to the binary face thresholds established here for \(q=2\).
+
+Third, transfer the binary face thresholds, with and without adversarial errors, to a uniformly chosen landmark set of fixed size, as Section~\ref{sec:fixed-cardinality} does for the classical query families.
+\input{sections/boxes}
+\input{sections/threshold_faces}
+\input{sections/noisy_threshold}
+\input{sections/face_window}
+\input{sections/noiseless_endpoint}
+\input{sections/noisy_endpoint}
+\input{sections/rare_faces}
+
+\appendix
+\input{sections/core}
+\input{sections/pair}
+\input{sections/window}
+\input{sections/birthday}
+\input{sections/classical_poisson}
+\input{sections/binary_orbit_poisson}
+\input{sections/binary_edge_poisson}
+\input{sections/qary_edge_poisson}
+\input{sections/fixed_cardinality}
+
+\section*{Acknowledgments}
+During the preparation of this manuscript, the author used Claude
+Opus~5.5 (Anthropic) to support developing the proofs, writing the
+verification code and preparing the manuscript. The author reviewed,
+validated and critically assessed all AI-assisted outputs and takes full
+responsibility for the content of the manuscript.
+
+\begin{thebibliography}{9}
+\bibitem{FKKY} M. Farhan, S. Klav\v{z}ar, D. Kuziak and I. G. Yero, \emph{Multiset resolvability parameters in graphs: A survey with new results and open problems}, preprint (2026), \href{https://arxiv.org/abs/2607.10311}{arXiv:2607.10311}.
+\bibitem{Allikvere} J. Allikvere, \emph{The edge multiset dimension of hypercubes}, preprint (2026), \href{https://arxiv.org/abs/2608.09983}{arXiv:2608.09983}.
+\bibitem{ID} A. Hakanen and I. G. Yero, \emph{Complexity and equivalency of multiset dimension and ID-colorings}, Fund. Inform. 191 (2024), 315--330, \href{https://doi.org/10.3233/FI-242185}{doi:10.3233/FI-242185}.
+\bibitem{EP} A. Eide and P. Pra{\l}at, \emph{Multiset metric dimension of binomial random graphs}, preprint (2025, revised 2026), \href{https://arxiv.org/abs/2507.11686}{arXiv:2507.11686}.
+\bibitem{CCM} P. Camion, B. Courteau and A. Montpetit, \emph{Metric coset schemes revisited}, Ann. Inst. Fourier (Grenoble) 49 (1999), 829--859, \href{https://doi.org/10.5802/aif.1695}{doi:10.5802/aif.1695}.
+\bibitem{Laird} L. Laird, R. C. Tillquist, S. Becker and M. E. Lladser, \emph{Resolvability of Hamming graphs}, SIAM J. Discrete Math. 34 (2020), 2063--2081, \href{https://doi.org/10.1137/19M1274511}{doi:10.1137/19M1274511}.
+\bibitem{Abdurakhmanov} J. K. Abdurakhmanov, \emph{Distribution of codewords on the faces of a hypercube and new combinatorial identities}, preprint (2025), \href{https://arxiv.org/abs/2506.18494}{arXiv:2506.18494}.
+\bibitem{Several} T. Laihonen, \emph{The metric dimension for resolving several objects}, Inform. Process. Lett. 116 (2016), 694--700, \href{https://doi.org/10.1016/j.ipl.2016.06.002}{doi:10.1016/j.ipl.2016.06.002}.
+\bibitem{GH} GitHub user \texttt{eliottcassidy2000}, \emph{The edge multiset dimension of the hypercube grows like \(\exp(\Theta(d^{1/3}))\)}, repository \texttt{math}, file \texttt{01-canon/theorems/THM-4534}, commit 0e27abd2aa, 2 October 2026, \href{https://github.com/eliottcassidy2000/math}{github.com/eliottcassidy2000/math}.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,145 @@
+\section{Pairwise collision rates and the first moment}
+In this and the next two sections we sharpen the pairwise collision bounds, establish a matching lower bound, and use them to determine the exact exponential decay rates of failure probabilities. Throughout these three sections, set
+\[
+ L=\log q,\quad \mu=n(1-1/q),\quad \sigma^2=(q-1)/q^2,\quad
+ p=q^{-n}e^{A n^{1/3}},\quad a=\tfrac23\sqrt{2\sigma^2}\,A^{3/2},
+\]
+for fixed $q\ge2$ and $A>0$. Write $\pi_r$ for the distance distribution of a uniformly random word from a fixed vertex, and let $\lambda_r=pq^n\pi_r$ be the expected number of landmarks in the radius-$r$ shell. For a sufficiently large fixed constant $B$, define the moderate-deviation window $W=\{r:|r-\mu|\le Bn^{2/3}\}$.
+
+By a uniform Stirling expansion on $W$, the expected shell sizes satisfy
+\[
+ \log\lambda_r=A n^{1/3}-\frac{(r-\mu)^2}{2\sigma^2n}+O_{q,B}(\log n),
+\]
+where the cubic Taylor remainder is bounded on $W$. Approximating the sum over $W$ by a Riemann sum with mesh $n^{-2/3}$ and integrand $\tfrac12(A-u^2/(2\sigma^2))_+$ yields
+\[
+ \tfrac12\sum_{r\in W}(\log\lambda_r)_+=an+O(E_n),
+ \qquad E_n=n^{2/3}\log n.
+\]
+Outside $W$, increasing $B$ if necessary allows Hoeffding's inequality to give the tail bound $\sum_{r\notin W}\lambda_r=o(1)$.
+
+\subsection{Upper bounds for nonantipodal pairs}
+We first show that every nonantipodal pair of distinct vertices has collision probability at most $\exp(-an+o(n))$, uniformly over all such pairs.
+
+For $q\ge3$, we split at query distance $d=n^{5/6}$. When $d\ge n^{5/6}$, we use the radially descending forest from the sparse construction: the conditional mean contracts deviations from $\mu$ by an absolute factor of at most $1-\Omega_q(n^{-1/6})$, so bounded rounding omits only $O_q(n^{1/6})$ central levels, which is negligible on the window scale. When $d<n^{5/6}$, we instead use the full-window fixed-shift paths on the common block of length $n-d=n-o(n)$. This gives an exponential rate of $a-o(1)$ uniformly, while fixing a mode on the differing block incurs only a polynomial factor per chosen cell.
+
+For binary words ($q=2$) with $1\le d<n$, write the first distance as $r=n/2+x$, where $r\in W$ and $x$ is positive and exceeds a fixed constant. Suppose first that $d\le n/2$. Conditional on $r$, the number $j$ of mismatches on the differing block is hypergeometric with support $[\max(0,r-(n-d)),\min(d,r)]\cap\mathbb Z$ and mode $dr/n+O(1)$. We choose $j$ to be the larger of a mode and $\lfloor d/2\rfloor+1$. This value lies in the support (even when $d=1$) and sits within a bounded distance of a mode. Because the ratio of any two adjacent positive hypergeometric probabilities is bounded above and below by powers of $n$, the chosen atom accounts for at least $n^{-O(1)}$ of the shell. Moreover, since
+\[
+ 0<2j-d\le 2dx/n+O(1)\le x+O(1)<2x,
+\]
+the resulting second distance $s=r+d-2j$ has strictly smaller absolute deviation from $n/2$ than $r$ does.
+
+When $d>n/2$, we apply the same selection to the $m=n-d$ agreeing positions: choosing $i>m/2$ mismatches on the agreeing block produces $s=n-r+2i-m$, which again has strictly smaller absolute deviation from $n/2$. For negative deviations $x<0$, complementing all landmark bits reflects the construction symmetrically. Consequently, every retained level has a directed arc to a level of strictly smaller deviation, forming a forest. Applying the forest maximum-atom bound yields a collision probability of at most $\exp(-an+o(n))$ uniformly over all nonantipodal pairs.
+
+\subsection{An involution lower bound}
+We now prove a matching lower bound on the collision probability of any pair of distinct vertices $x,y$. The idea is to pair up words using a distance-swapping involution so that the histogram difference takes the symmetric form $X-X'$, restrict $X$ to a typical integer box, and apply Cauchy--Schwarz.
+
+Consider the involution on the Hamming cube that exchanges the letters of $x$ and $y$ on every coordinate where they differ and fixes all other letters. This map exchanges $x$ and $y$. Any word fixed by the involution is equidistant from $x$ and $y$ and therefore contributes nothing to the histogram discrepancy. From each nontrivial two-element orbit, pick one representative $z$; its contribution vector to the discrepancy is $e_{d(x,z)}-e_{d(y,z)}$, while its partner in the orbit contributes the negative of this vector. The full discrepancy is therefore distributed as $X-X'$, where $X$ and $X'$ are independent identically distributed Bernoulli sums over the chosen representatives.
+
+Each coordinate $r$ of $X$ receives contributions from at most the two radius-$r$ shells around $x$ and $y$, so its variance is at most $2\lambda_r$. By the shell tail bound outside $W$, with probability $1-o(1)$ no selected representative has distance outside $W$ from either query. Inside $W$, Chebyshev's inequality and a union bound show that, with probability $1-o(1)$, every coordinate of $X$ lies within $n^2\max(1,\sqrt{2\lambda_r})$ of its mean. The resulting integer box, with zeros outside $W$, has log cardinality at most $an+O(E_n)$ by the shell sum. Applying Cauchy--Schwarz to the probability distribution of $X$ on this box gives
+\[
+ \mathbb P(X=X')\ge \exp(-an-O(E_n)).
+\]
+Note that this argument makes no assumption of independence among the coordinates of $X$. To require in addition that both queries $x,y$ are absent from the landmark set costs only a factor $(1-p)^2$: simply delete their two-element orbit and repeat the exact same argument, whose variance and box bounds only improve.
+
+\subsection{Antipodes and counting}
+In the binary cube ($q=2$), antipodal pairs have a different collision rate because their distance shells pair up in reverse order. We compute this rate and combine it with the nonantipodal bounds to obtain the first-moment exponent for the number of vertex collisions.
+
+For a binary antipodal pair, distance $r$ from one vertex is distance $n-r$ from the other. A collision therefore occurs if and only if opposite shell counts coincide, independently for each $r<n/2$; when $n$ is even, the middle shell imposes no constraint. Consider independent counts $U,V\sim\mathrm{Bin}(D,p)$ for a pair of opposite shells. When $\lambda=Dp\ge1$, the maximum-atom estimate gives the upper bound $\mathbb P(U=V)=O(\lambda^{-1/2})$; conversely, Chebyshev's inequality places constant probability mass on an interval of $O(\sqrt\lambda)$ integers, so Cauchy--Schwarz gives the matching lower bound up to a constant factor. When $\lambda<1$, the event that both counts are zero bounds the log probability below by $-O(\lambda)$, since $p=o(1)$. Summing over the half-window $r\in W$ with $r<n/2$ and controlling the tail outside $W$ yields
+\[
+ \log\mathbb P(\text{antipodal collision})=-an/2+O(E_n)
+ =-(\sqrt2/6)A^{3/2}n+O(E_n).
+\]
+For the outer-vertex version, we additionally fix both endpoint counts at zero, which changes the log probability by at most $O(1)$.
+
+There are $q^n(q^n-1)/2$ unordered pairs of distinct vertices. Removing the $2^{n-1}$ binary antipodal pairs does not affect the leading log pair count $2Ln$. Combining the pair counts with the pairwise collision probabilities shows that the first-moment exponent for collisions is $2L-a$ when $q\ge3$ and $\max(2L-a,L-a/2)$ when $q=2$. This first-moment calculation alone does not control dependence among pairs.
+
+\section{A converse for Bernoulli landmarks}
+In the strongly subcritical regime $a<L$, we show that the number of unordered collisions for vertices, outer vertices, and edges all have exponent $2L-a$ in probability. The lower bound comes from a pigeonhole argument on a common box of typical histograms, and the upper bound follows from Markov's inequality.
+
+Fix a vertex or an edge and write $M_r$ for the number of landmarks at distance $r$ from it, using the corresponding shell law $\pi_r$ and mean $\lambda_r=pq^n\pi_r$. For an edge, the distance law is a binomial on $n-1$ coordinates plus an independent bounded Bernoulli offset, so the same Stirling expansion and tail bound hold with the mean shifted by $O(1)$. Applying Markov's inequality outside $W$ and Chebyshev's inequality inside $W$ shows that, with probability $1-o(1)$, the histogram is supported on $W$ and satisfies
+\[
+ |M_r-\lambda_r|\le n^2\max(1,\sqrt{\lambda_r})\quad(r\in W).
+\]
+
+For each query type, the common box of histograms satisfying these bounds has cardinality $K\le\exp(an+O(E_n))$. If there are $T$ queries of that type, then $\log T=Ln+o(n)$, and the expected number of atypical queries is $o(T)$; hence at least $T/2$ queries are typical with high probability. For outer vertices, removing the landmark set discards at most $|S|=o(q^n)$ vertices with high probability by Markov's inequality. A finite union bound handles all three query types simultaneously. When $a<L$, the $T'\ge T/3$ remaining typical queries map into at most $K$ histograms, so Cauchy--Schwarz guarantees at least $(T'^2/K-T')/2$ unordered collisions. This yields the lower collision-count exponent $2L-a$ in probability.
+
+For vertices and outer vertices, the matching upper bound follows directly from Markov's inequality and the first-moment calculation above. For edges, fix $0<\delta<1/8$ and apply the projected-forest bounds: bulk projected pairs have collision probability at most $\exp((-a+o(1))n)$ and small-difference projected pairs have probability at most $\exp((-\sqrt{1-\delta}\,a+o(1))n)$, with at most $O_q(n^2q^{2n})$ pairs of each kind. When $q=2$, the additional near-antipodal regime has collision probability at most $\exp((-\sqrt{1-\delta}\,a/2+o(1))n)$ and at most $\exp((L+h(\delta)+o(1))n)$ pairs, where $h$ denotes binary entropy in nats. Taking the limsup in $n$ and then letting $\delta\downarrow0$ shows that the expected collision count has upper exponent $2L-a$ for $a<L$, and Markov's inequality completes the upper bound. This initial argument covers $a<L$; Section~\ref{sec:classical-birthday} handles the full subcritical range.
+
+\section{Exponential failure probabilities and binary parity}
+We now determine the exact exponential decay rate of the failure probability for each resolution notion. Write $F_V,F_O,F_E$ for the events that vertex, outer-vertex, and edge resolution fail, respectively. For each such event $F$, we prove that
+\[
+ \lim_{n\to\infty} n^{-1}\log\mathbb P(F)=
+ \begin{cases}\min(0,2L-a),&q\ge3,\\ \min(0,L-a/2),&q=2.\end{cases}
+\]
+By sandwiching between a single event and the sum of the three probabilities, the same limit holds for the union of the three failure events, though not necessarily for their intersection. In the subcritical range $a<2L$, the second-moment arguments in this section show that each individual failure probability is at least $\exp(-O_{q,A}(E_n))$; the stronger high-probability failure statement is proved separately in Section~\ref{sec:classical-birthday}.
+
+\subsection{Balanced joint cells}
+To control the second moment of the number of colliding pairs, we need a multi-center analogue of the modal cell construction. Given $k\le4$ centers and a chosen anchor among them, we show that for every anchor distance $r\in W$ there is a single joint-distance cell of inverse-polynomial relative size in which the distances to all other centers stay within $O_{q,k}(1)$ of their conditional means.
+
+Condition a uniform word to lie at distance $r\in W$ from the anchor. For another center at distance $d$ from the anchor, an agreeing coordinate mismatches that center with probability $r/n$, whereas a differing coordinate mismatches it with probability $1-r/((q-1)n)$. Summing over coordinates gives the conditional mean distance
+\[
+ \mu+\rho(d)(r-\mu),\qquad \rho(d)=1-qd/((q-1)n).
+\]
+
+We claim that there exists a joint-distance cell at anchor distance $r$ whose size is at least $q^n\pi_r/(n+1)^{O_{q,k}(1)}$ and in which every other center distance lies within $O_{q,k}(1)$ of its conditional mean. To construct it, partition the $n$ coordinates according to their $k$-tuples of letters across the $k$ centers into at most $q^k$ blocks of sizes $n_j$. Round each expected block mismatch count $rn_j/n$ up or down to an integer $l_j$ so that the counts $l_j$ sum to $r$. Each $l_j$ lies within two places of a mode of $\mathrm{Bin}(n_j,r/n)$ and therefore has inverse-polynomial probability, since the modal mass is at least $1/(n+1)$ and adjacent positive binomial masses have polynomial ratios. Conditional on the total number of mismatches being $r$, the joint probability of the block counts $l_j$ is the product of these binomial probabilities divided by $\mathbb P(\mathrm{Bin}(n,r/n)=r)$, which is again inverse polynomial. Finally, within each block distribute the $l_j$ mismatches as evenly as possible (up to rounding) among the $q-1$ nonanchor symbols. This forms a modal multinomial composition and hence has probability at least $(n+1)^{-(q-1)}$. Because the block and symbol counts differ from their conditional means by bounded amounts, all resulting center distances also differ from their conditional means by $O_{q,k}(1)$.
+
+\subsection{Two-pair estimate}
+We now apply the second moment method to a subfamily of outer vertex pairs at distance close to $\mu$. This yields the lower bound for vertex and outer-vertex failure when $q\ge3$, and for the even-distance nonantipodal subfamily when $q=2$.
+
+Restrict attention to unordered vertex pairs whose Hamming distance $d_n$ lies within two of $\mu$, taking $d_n$ to be even when $q=2$. The number of such candidate pairs is $q^n\binom n{d_n}(q-1)^{d_n}/2=\exp(2Ln-O(\log n))$. Let $Z$ count the colliding candidate pairs for which both endpoints lie outside the landmark set $S$. By the involution lower bound, each candidate pair contributes at least $\exp(-an-O(E_n))$ to $\mathbb EZ$.
+
+\step{Separating pairs of candidate pairs.}
+To bound $\mathbb EZ^2$, measure distance between endpoints using $\Delta=d_H$ for $q\ge3$, and the quotient distance modulo complement $\Delta(u,v)=\min(d_H(u,v),n-d_H(u,v))$ for $q=2$. Fix $0<\delta<\min((q-1)/(4q),1/8)$. Given two candidate pairs, draw a cross edge between an endpoint of the first pair and an endpoint of the second whenever their $\Delta$-distance satisfies $\Delta\le\delta n$. Because the two endpoints within each candidate pair are separated by more than $2\delta n$ in $\Delta$, no endpoint can be incident to two cross edges; thus the cross edges form a matching, including any repeated or complemented endpoints across the two pairs.
+
+\step{Joint upper bound for separated pairs.}
+Suppose first that at most one cross edge joins the two candidate pairs. Then each pair has at least one unattached endpoint, which we take as its anchor. Every comparison between an anchor and the other three endpoints satisfies $|\rho|\le1-\eta$ for some fixed $\eta=\eta_{q,\delta}>0$. For each anchor and each $r\in W$ satisfying $|r-\mu|>K_q/\eta$ (where $K_q$ is a sufficiently large rounding constant), select the balanced joint cell constructed in the previous subsection. By our choice of $K_q$, all three other distances in this cell have strictly smaller absolute deviation from $\mu$ than $r$ does.
+
+Orient each pair with its anchor positive and stack the two discrepancy vectors into a single two-block vector. Every chosen cell's column has a unique coordinate of maximum deviation from $\mu$, namely $+1$ in its own anchor's block at shell $r$. These leading coordinates are pairwise distinct across all chosen cells. In any putative linear relation among the columns, examining the largest-deviation layer that appears shows that its coefficient must vanish, proving linear independence. The cells are also pairwise disjoint, because each cell's unique leading anchor and radius identify it. Conditional on all landmark selections outside these cells, a simultaneous collision of both pairs therefore determines at most one vector of independent binomial cell counts. Multiplying their maximum-atom bounds, each block pays half the positive log-shell sum, with $O(\log n)$ loss per level from the polynomial cell factors and bounded losses per omitted central level on the $n^{1/3}$ scale. The joint collision probability for a separated pair of candidate pairs is therefore at most $\exp(-2an+O_\delta(E_n))$. Applying the identical single-anchor argument to a single candidate pair gives an upper bound of $\exp(-an+O(E_n))$.
+
+\step{Close pairs and the second moment.}
+Suppose instead that two cross edges join the two candidate pairs. Then the second pair lies inside two specified $\Delta$-balls of radius $\delta n$. Each such ball has cardinality at most $2\sum_{i\le\delta n}\binom ni(q-1)^i\le\exp(b_q(\delta)n+O(\log n))$, where $b_q(\delta)=h(\delta)+\delta\log(q-1)$. Consequently, there are at most $\exp((2L+2b_q(\delta))n+O(\log n))$ ordered pairs of candidate pairs of this kind, including identical pairs. We bound the joint collision probability of each such pair by the single-pair upper bound.
+
+Setting $t=2L-a$, combining the separated and close contributions gives the moment bounds
+\begin{align*}
+ \mathbb EZ&\ge e^{tn-O(E_n)},\\
+ \mathbb EZ^2&\le e^{2tn+O_\delta(E_n)}+e^{(t+2b_q(\delta))n+O_\delta(E_n)}.
+\end{align*}
+By Cauchy--Schwarz, $\mathbb P(Z>0)$ has lower exponent at least $\min(0,t-2b_q(\delta))$; letting $\delta\downarrow0$ gives the lower bound $\min(0,t)$. Markov's inequality gives the matching upper exponent for this subfamily. When $t>0$, fixing $\delta$ small enough that $2b_q(\delta)<t$ yields the quantitative subexponential lower bound on $\mathbb P(Z>0)$. Combining this with the all-pairs upper bound completes the proof of both vertex failure formulas for $q\ge3$. For binary words, it establishes the exponent $\min(0,t)$ for the even-distance nonantipodal subfamily.
+
+\subsection{The binary antipodal family}
+We next apply the same second-moment framework to binary antipodal pairs. Let $Z_*$ count outer antipodal collisions. From the antipodal calculation above, each antipodal pair collides with probability $\exp(-an/2+O(E_n))$.
+
+Consider two antipodal classes whose $\Delta$-distance exceeds $\delta n$. Choose one representative from each class and repeat the balanced-cell construction with each representative as anchor, taking only levels $r<n/2$ outside the bounded central omission around $n/2$. Fold each pair's discrepancy block about $n/2$: a word at distance $s<n/2$ from the representative contributes $+1$ at coordinate $s$, a word at distance $n-s$ contributes $-1$ at coordinate $s$, and the middle shell contributes zero. Because the other representative's folded layer lies strictly closer to $n/2$, the leading coordinates of all chosen columns are distinct, and the half-window joint collision estimate gives at most $\exp(-an+O_\delta(E_n))$.
+
+Close antipodal classes (within $\delta n$ in $\Delta$) contribute at most $\exp((L+h(\delta))n+O(\log n))$ ordered pairs, each bounded by the single-pair probability. Running the preceding second-moment argument with $t'=L-a/2$ and $h(\delta)$ in place of $2b_q(\delta)$ proves that $\mathbb P(Z_*>0)$ has exponential rate $\min(0,t')$ regardless of the parity of $n$. Together with the all-pairs upper bound, this establishes both the vertex and outer-vertex failure formulas for $q=2$.
+
+\subsection{Parity restrictions}
+In the binary cube, the parities of the landmark weights impose algebraic constraints on possible collisions. We record these constraints here so we can condition on them in the final subsection.
+
+Partition the landmark set $S$ by Hamming weight parity: set $S_b=\{s\in S:|s|\equiv b\pmod2\}$ and $m_b=|S_b|$. Any odd-distance collision exchanges the two distance-parity classes and therefore requires $m_0=m_1$. Since $m_0$ and $m_1$ are independent $\mathrm{Bin}(2^{n-1},p)$ random variables, the probability that they coincide is $\Theta((2^np)^{-1/2})=\Theta(e^{-A n^{1/3}/2})$. In particular, when $n$ is odd, antipodal pairs have odd distance and hence antipodal collisions are absent with high probability for every fixed $A>0$. When $n$ is even, antipodes have the same parity, so the landmark parity class not appearing at the middle distance must split evenly between opposite shells and therefore must have even population. Thus having both $m_0$ and $m_1$ odd excludes every antipodal collision; by independence and the binomial parity formula, this event has probability $1/4+o(1)$.
+
+For an even-distance collision of distance $d$, let $D$ be the set of differing coordinates and define the parity-class XOR sums $v_b=\bigoplus_{s\in S_b}s$. Because the distance histograms match, the sums of distances to the two queries coincide within each parity class, which yields
+\[
+ \sum_{i\in D}(-1)^{x_i}\bigl(m_b-2\#\{s\in S_b:s_i=1\}\bigr)=0.
+\]
+Dividing by two and reducing modulo two gives $v_b\cdot\mathbf1_D=(m_b\bmod2)(d/2+x\cdot\mathbf1_D)$ in $\mathbb F_2$. An even population $m_b$ therefore forces $\mathbf1_D$ to be orthogonal to $v_b$, while two odd populations force orthogonality to $v_0+v_1$. Neither linear restriction excludes all even-distance collisions.
+
+\subsection{Edge failures}
+We now prove the matching exponential failure-probability rates for edge resolution. For the lower bound, restrict to parallel edges whose active coordinate is the first coordinate with active pair $\{0,1\}$, indexed by their inactive word $x$ on the remaining $N=n-1$ coordinates. The distance from a landmark $(u,w)$ to this edge is $d_H(w,x)+\mathbf1_{u\notin\{0,1\}}$.
+
+In the second-moment upper bounds on separated pairs, we use only balanced cells with $u=0$, conditioning on all landmark selections with other values of $u$. Both the factor of $q$ in shell sizes and the change from $n$ to $N$ leave the exponential rate and the $O(E_n)$ precision unchanged. For the single-pair lower bound, apply the involution that transposes the two projected queries on differing coordinates while fixing $u$; the true edge-shell law, with its bounded independent offset, produces the same concentration box as for vertices. The candidate-pair moment argument therefore gives lower exponent $\min(0,2L-a)$, together with the quantitative subexponential lower bound for $t>0$. For binary edges, the offset vanishes identically, opposite projected shells have independent $\mathrm{Bin}(2\binom Nr,p)$ counts, and the folded second-moment argument yields lower exponent $\min(0,L-a/2)$.
+
+For the matching upper bound, we apply the all-edge projected forest estimates from Appendix~\ref{app:sparse-upper}: take first the limsup in $n$, then let $\delta\downarrow0$, and cap Markov's probability bound at one. This yields exactly the claimed exponents for edge resolution.
+
+\subsection{Conditioning on binary parity}
+Finally, we show that conditioning on the parity event that forbids binary antipodal collisions shifts the exponential failure rate of vertex and outer-vertex resolution to the nonantipodal rate.
+
+Define $G_n=\{m_0\ne m_1\}$ when $n$ is odd, and $G_n=\{m_0,m_1\text{ both odd}\}$ when $n$ is even. As shown above, $\mathbb P(G_n)$ tends to one for odd $n$ and to $1/4$ for even $n$. For $F=F_V,F_O$, we show that
+\[
+ \lim n^{-1}\log\mathbb P(F\mid G_n)=\min(0,2\log 2-a).
+\]
+Since $G_n$ excludes all antipodal collisions, applying Markov's inequality to nonantipodal collisions and dividing by $\mathbb P(G_n)$ gives the upper bound immediately.
+
+For the lower bound, consider an even-distance candidate pair from the two-pair estimate. Exactly $H=\binom{d_n}{d_n/2}2^{n-d_n-1}$ neutral words of each parity are equidistant from its two endpoints, since half of the differing positions must mismatch each endpoint and at least one agreeing coordinate is free to determine the parity. Neither endpoint itself is neutral. Conditional on all nonneutral landmark selections, the two neutral populations are independent $\mathrm{Bin}(H,p)$ random variables with mean $Hp\asymp e^{An^{1/3}}/\sqrt n\to\infty$. Uniformly over the nonneutral selections, the probability that the two total populations are equal is $o(1)$ by the maximum-atom bound, while the probability that both total populations are odd is $1/4+o(1)$. Because the outer collision event depends only on the nonneutral selections, it follows that $\mathbb E[Z\mathbf1_{G_n}]\ge c\mathbb EZ$ for some constant $c>0$, and restricting to $G_n$ cannot increase the second moment. The same second-moment argument therefore yields the matching lower bound and quantitative bound.
+
+When $t=2\log2-a<0$, comparing the conditional and unconditional rates shows that, conditional on failure, the probability of even one nonantipodal collision is at most $\exp(tn/2+o(n))$. In odd dimensions, these rare failures therefore occur overwhelmingly at balanced landmark populations, even though balance itself is atypical.

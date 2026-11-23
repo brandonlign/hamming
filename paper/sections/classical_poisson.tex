@@ -1,0 +1,120 @@
+\section{The narrow vertex window for alphabets of size at least three}
+\label{sec:classical-poisson}
+
+For fixed alphabet size \(q\ge3\), the sparse Bernoulli transition for ordinary and outer vertices exhibits a finer critical window around the threshold of Section~\ref{sec:classical-birthday}. This section establishes a Poisson limit for the number of collisions in that window; it does not treat the binary antipodal case, ordinary edges, or fixed-size sampling.
+
+Recall the notation \(s=n^{1/3}\), \(v=\sigma^2\), \(A=C_q\), and \(R=\sqrt{2vA}\), and define the auxiliary function and constants
+\[
+ \begin{split}
+ G(h)&=-\log\!\left[e^{-e^h/(2\pi)}
+                   I_0(e^h/(2\pi))\right]-\tfrac12(h)_+,\\
+ J_j&=\int_{\mathbb R} h^j G(h)\,dh\quad(j=0,1),\\
+ t_*&=\frac1R\left(\frac A2+
+    \frac{R^5(1+2v)}{360v^3}-\frac{2v}{R}J_0\right),
+ \qquad u_*=\frac{1}{4R},
+ \qquad D=\frac{R^3}{6v}+\frac{2v^2}{R^3}J_1 .
+ \end{split}
+\]
+Here \(I_0\) is the modified Bessel function of the first kind; see its \href{https://dlmf.nist.gov/10.32.E1}{integral representation} and \href{https://dlmf.nist.gov/10.40.E1}{large-argument expansion}. From these properties, \(G\) and its piecewise derivatives decay exponentially at both ends of the real line, so the integrals \(J_0\) and \(J_1\) converge absolutely.
+
+We prove that for any fixed \(y\in\mathbb R\) and expected landmark count
+\[
+ K_n=\kappa_1\sqrt n\,\exp\!\left(
+ As+\frac{t_*}{s}+\frac{u_*\log n+y}{s^2}\right),
+\]
+the number of unordered ordinary vertex collisions converges in distribution to a Poisson random variable with mean
+\[
+ \Lambda_q(y)=\tfrac12(2\pi v)^{1/4}e^{-D-Ry}.
+\]
+The same Poisson limit holds for outer vertices, so in both cases the probability of successful resolution tends to \(e^{-\Lambda_q(y)}\). As a consequence, if we replace \(t_*/s\) by \(t/s\) and omit the \(s^{-2}\) term, success holds with high probability if and only if \(t>t_*\). Likewise, at \(t=t_*\), adding a term \(u\log n/s^2\) yields high-probability success for \(u>u_*\) and high-probability failure for \(u<u_*\).
+
+The proof proceeds in three steps. First, we refine the Fourier localization of Section~\ref{sec:classical-birthday} to obtain a sharp asymptotic formula for the single-pair collision probability \(P_d\) across the entire typical distance band. Second, we evaluate the resulting scalar sums through constant order to compute the expected collision count. Third, we prove by the method of factorial moments that the collision count converges to a Poisson limit.
+
+\step{The single collision atom and its gauge.}
+Our first goal is to derive an exact-constant asymptotic expression for \(\log P_d\), uniform over all vertex pairs at typical distance \(|d-\mu|\le n^{11/12}\).
+
+As in Section~\ref{sec:classical-birthday}, we localize the Fourier integral for a single collision after deleting one central row \(c\) nearest to \(\mu\). The two constraints \(d_x=r,d_y=c\) leave residuals of size \(O(n^{7/12})\) after the shell tilt and rounding, and the same two unimodular coordinate moves produce the required singleton column intensities. On the small rows, we split the phases of the two endpoints into separate factors; the error introduced by this splitting is bounded by a constant times the sum of joint intensities over pairs of small radii, which is \(o(1)\) by the two-tilt intensity bound. Once separated, each independent small-row factor integrates exactly to \(e^{-2\lambda_r}I_0(2\lambda_r)\).
+
+For the dense rows, we whiten the covariance matrix by the marginal standard deviations of the rows. On the full radial shell space, write \(w_r=\sqrt{\pi_r}\). In these coordinates, the joint-radii operator takes the form \(ww^T+F\), where \(Fw=0\) and the operator \(F\) has eigenvalues \(f_k(d)\), \(k\ge1\), in the centered radial basis. Combining the geometric bound on \(f_k\) for large degrees with the fixed-degree decay bound shows that the trace norm satisfies \(\|F\|_1=o(1)\). Let \(E\) denote the inclusion matrix of the dense undeleted rows, and set \(N=E^T(I-ww^T)E\). Then the matrix \((I-ww^T)EN^{-1/2}\) is isometric, which implies that the compressed dense covariance matrix, normalized by its diagonal scale \(2\lambda_r\), has determinant \((1+o(1))\det N=(1+o(1))\pi_c\). The second equality follows from the matrix determinant identity \(\det N=1-\sum_{\mathrm{dense}\ r\ne c}\pi_r\), together with the fact that the total shell mass of all omitted rows other than \(c\) is \(\exp(-As+o(s))\).
+
+In the resulting product over dense rows, each independent Gaussian factor \((4\pi\lambda_r)^{-1/2}\) can be replaced by the exact Bessel factor \(e^{-2\lambda_r}I_0(2\lambda_r)\) at a total relative error of \(1+o(1)\), by the large-argument expansion of \(I_0\). Setting \(h_r=\log(4\pi\lambda_r)\) and combining the small and dense contributions, we obtain the single-atom formula
+\[
+ \log P_d=
+ -\sum_r\{\tfrac12(h_r)_++G(h_r)\}
+ +\tfrac12 h_c-\tfrac12\log\pi_c+o(1).                 \tag{*}
+\]
+Every error term in this derivation, including the relative Fourier localization error, is uniform across the entire typical distance band.
+
+\step{Scalar sums through constant order.}
+We now evaluate the two sums in (*) up to \(o(1)\) error, allowing general parameters \(t,u\) in the formula for \(K_n\) so that we also recover the coarser transitions.
+
+Write \(p_0=1-1/q\) and \(x=(r-\mu)/s^2\). Uniformly on a fixed moderate window around \(x=0\), Stirling's expansion of the binomial shell mass (whose factorial remainder is \(O(s^{-3})\)) yields
+\[
+ h_r=sF_0(x)+g(x)+s^{-1}j(x)+s^{-2}k(x)+O(s^{-3}),
+\]
+where the coefficient polynomials are
+\[
+ \begin{split}
+ F_0(x)&=A-x^2/(2v),\quad g(x)=-c_3x^3,\\
+ j(x)&=t+b x-c_4x^4,\quad b=(2p_0-1)/(2v),\\
+ k(x)&=u\log n+y+(1-2v)x^2/(4v^2)
+                      +(\text{an odd quintic monomial}).
+ \end{split}
+\]
+Here \(c_3,c_4\) are the same constants defined in the preceding section.
+
+We first evaluate the clipped half-sum \(\sum_r \tfrac12(h_r)_+\). Extending the calculation from Section~\ref{sec:classical-birthday}, the contribution through order \(s\) is \(2Ln+s[Rt-R^5(1+2v)/(360v^3)]\). We claim that the remaining constant-order and logarithmic contribution is
+\[
+ R(u\log n+y)+\frac{(1-2v)R^3}{12v^2}-c_3 b v R^3
+   =R(u\log n+y)+\frac{R^3}{6v},
+\]
+up to a remainder of \(o(1)\). To derive the boundary correction near each endpoint \(x=\pm R\), introduce the local coordinate \(z=F_0(x)\) with positive Jacobian \(a(z)=|dx/dz|\), and set \(\epsilon=s^{-1}\). Integrating between \(z=0\) and the shifted root \(z=-\epsilon g+O(\epsilon^2)\) on each local branch shows that the boundary correction to the normalized integral of \((F_0+\epsilon g+\epsilon^2j+\epsilon^3k)_+\) is \(\epsilon^2 a g^2/2\) at second order and \(\epsilon^3(a g j-a g^2 g_z/2-a_z g^3/6)\) at third order, with all functions evaluated at \(z=0\). When we sum the two opposite branches, the last two third-order terms cancel by parity, leaving only the product of \(g\) with the odd part of \(j\). The trapezoidal rule error for replacing the discrete sum by this integral is \(O(s^{-1})\), because the derivative with respect to \(x\) of the clipped polynomial has total variation \(O(s)\) (including the jumps at the two corners) on a mesh of spacing \(s^{-2}\). Finally, the \(O(s^{-3})\) remainder in the shell approximation contributes \(o(1)\) after summing over the window.
+
+We next evaluate the Bessel correction sum \(\sum_r G(h_r)\). The same trapezoidal estimate applies here, since the exponential decay of the piecewise derivatives of \(G\) and the bounded number of monotone pieces imply that the derivative in \(x\) of \(G(h_r)\) has total variation \(O(s)\). In fixed neighborhoods of the two roots \(x_0=\pm R\), we change variables to \(h\). Inverting the expansion of \(h_r\) gives \(x-x_0=(h-g(x_0))/(sF_0'(x_0))+O((1+|h|^2)/s^2)\), and expanding the derivative at \(x_0\) shows that uniformly for \(|h|\le C\log n\), the density of shells is
+\[
+ s^2|dx/dh|
+ =\frac{sv}{R}
+  +\frac{v^2}{R^3}(h-g(x_0))
+  -\frac{v^2}{R^2}\operatorname{sgn}(F_0'(x_0))g'(x_0)
+  +O((1+|h|^2)/s).
+\]
+When we add the contributions from the two branches \(x_0=\pm R\), both terms involving \(g\) cancel by symmetry. The integrable exponential tails of \(G\) justify truncating the integral at \(|h|\le C\log n\), while outside the two neighborhoods of \(\pm R\) the sum is exponentially small (with the remote shell tail bounded as before). Integrating term by term gives \(\sum_rG(h_r)=2svJ_0/R+2v^2J_1/R^3+o(1)\).
+
+Lastly, for the deleted central row \(c\), we have \(h_c=As+o(1)\) and \(\pi_c\sim(2\pi vn)^{-1/2}\). Substituting all three pieces into (*) yields
+\[
+ \log P_d=-2Ln-sR(t-t_*)+(1/4-Ru)\log n
+             +\tfrac14\log(2\pi v)-D-Ry+o(1).
+\]
+
+To pass from typical pairs to the full expected collision count, we rule out atypical distances. For pairs outside the typical band with \(d\ge\delta n\), the entropy loss of \(\Omega(n^{5/6})\) outweighs the \(O(n^{2/3}\log n)\) loss from the balanced descending forest bound. For close pairs with \(1\le d<\delta n\), choosing \(\delta\) small enough ensures that the uniform pair bound \(e^{-2Ln+o(n)}\) beats the total number of such pairs \(e^{(L+b_q(\delta))n+O(\log n)}\). Hence all atypical single-pair collisions have total probability \(o(1)\). Since the number of typical unordered pairs is \((1+o(1))q^{2n}/2\), the expected number of collisions tends to \(\Lambda_q(y)\) in the centered window. Away from this window, the claimed high-probability success and failure regimes follow from the first and second moments of the preceding section, now applied over the full central distance band.
+
+\step{Fixed factorial moments.}
+To complete the proof of the Poisson limit, we compute the \(k\)-th factorial moment of the collision count for each fixed integer \(k\). We restrict to the count \(M_n\) of unordered collisions whose pair lies in the typical internal-distance band; as just shown, the expected number of omitted collisions is \(o(1)\).
+
+Fix a factorial order \(k\) and consider an ordered \(k\)-tuple of distinct unordered candidate pairs, viewed as candidate edges on their endpoints. Choose a sufficiently small constant \(\delta>0\), join any two endpoints whose Hamming distance is at most \(\delta n\), and partition the endpoints into the resulting connected clusters. Each cluster has diameter at most \(2k\delta n\), and because every candidate pair lies in the typical distance band, no candidate edge has both endpoints in the same cluster. Contracting each cluster to a single vertex produces a multigraph of candidate edges with \(b\) vertices, \(c\) connected components, and no isolated vertices. For any specified cluster partition of the endpoints, the number of vertex configurations is at most
+\[
+ \exp\{bLn+2k b_q(2k\delta)n+O_k(\log n)\}.
+\]
+Furthermore, by a union bound on the distances from each endpoint in a cluster to a fixed cluster representative, every cluster has a linear number of coordinates on which all of its endpoints agree.
+
+\step{Spanning-tree construction and non-disjoint configurations.}
+We first show that configurations with overlapping clusters or parallel edges contribute negligibly to the \(k\)-th factorial moment, by constructing an independent system of shell-discrepancy columns along a spanning forest.
+
+In each connected component of the contracted graph, choose a rooted spanning tree and retain one candidate edge per tree edge. For each nonroot cluster, anchor one word construction at the endpoint incident to its parent tree edge. Fix a shell of radius \(r\) around this anchor in the main window, excluding a fixed central interval around \(\mu\). Under the tilted shell law centered at the anchor, partition the coordinates into cells according to the full tuple of all endpoint letters.
+
+We round the expected letter counts in each cell so that every comparison with another endpoint moves inward toward \(\mu\). When \(r>\mu\), in each large cell we round the counts of all nonanchor letters upward and assign the remaining count to the anchor letter. On any cell where a same-cluster comparator differs from the anchor, its distance to the landmark minus the anchor's distance equals the count of anchor letters minus the count of comparator letters; our rounding ensures this difference is at most its tilted mean, which is strictly negative. In small cells we place no anchor letters at all, so the difference is nonpositive for every same-cluster comparator. If a designated same-cluster comparator is required to move strictly inward, we place its letter on every small-cell coordinate where it differs from the anchor. When \(r<\mu\), we instead round all nonanchor letter counts downward, making the signed distance difference nonnegative for all same-cluster comparators and strictly positive where a designated comparator differs. Every cell undergoes only a bounded adjustment, and we restore the exact total radius \(r\) inside a single linear-size cell where all endpoints of the anchor cluster agree.
+
+Under this allocation, all same-cluster comparisons remain weakly inward on the same side of \(\mu\), and any designated same-cluster comparator is strictly inward. Meanwhile, all comparisons with endpoints outside the anchor cluster are uniform contractions, because their distance from the anchor exceeds \(\delta n\) and the negative coordinatewise correlation is bounded in modulus by \(1/(q-1)<1\). Once the excluded central strip around \(\mu\) is wide enough to absorb the bounded rounding errors, every external comparison is strictly inward as well. By the multinomial modal-count estimate, the prescribed allocations have conditional probability at least an inverse polynomial in \(n\) under the shell law.
+
+Now examine the incidence matrix of these word classes on the discrepancy rows of the retained tree edges, orienting each tree edge by its child endpoint. At the layer of maximal absolute deviation from \(\mu\), the column associated with a nonroot anchor has entry \(+1\) in its parent-edge row and possibly nonzero entries in the child-edge rows of its own cluster at the same radius. Ordered from parent to child, these leading incidence columns form a triangular matrix with diagonal entries equal to one. Radii on opposite sides of \(\mu\) at the same absolute level cannot interfere, because near comparisons stay on the same side of the mean and all other comparisons move strictly inward. Descending level by level toward \(\mu\) proves that all of these columns are linearly independent, and therefore the corresponding exact column classes are disjoint.
+
+Conditional on all other landmark selections, the zero-discrepancy system admits at most one vector of counts for these independent binomial column classes. Multiplying the maximal point probabilities of those binomial variables gives a joint collision bound of \(\exp[-(b-c)an+O_k(n^{2/3}\log n)]\), since each class loses at most a polynomial factor relative to its shell intensity. Because \(a=2L\), whenever \(b>2c\) the product of this probability bound with the configuration count is exponentially small once \(\delta\) is chosen small enough.
+
+The remaining non-disjoint case is \(b=2c\), in which every connected component consists of two clusters. If any component contains more than one candidate edge, pick two distinct edges in that component and anchor them on the side where their endpoints differ. In the two resulting anchor constructions, designate the other anchor as strictly inward using the modification described above. Their leading columns are then diagonal on the two chosen edge rows. Selecting one anchor per remaining component as before, all external-cluster contributions move strictly inward, yielding \(c+1\) independent columns per radius instead of \(c\). This extra factor makes all such multi-edge configurations exponentially negligible as well.
+
+\step{Separated typical configurations and conclusion.}
+The only configurations that remain have \(2k\) distinct endpoints lying in pairwise separated clusters, with a single candidate edge in each of the \(k\) components. If any \(2k\)-tuple cell count deviates from its mean \(n/q^{2k}\) by more than \(n^{11/12}\), Hoeffding's inequality bounds the proportion of such endpoint tuples by \(\exp(-\Omega_k(n^{5/6}))\), which defeats the \(O_k(n^{2/3}\log n)\) loss in the joint atom bound.
+
+For all remaining typical \(k\)-tuples of pairs, we apply the Fourier comparison of Section~\ref{sec:classical-birthday} simultaneously across all \(k\) blocks. To build a singleton column in a given block, we prescribe its two radii as before and impose equality between the two endpoint distances in each of the other \(k-1\) blocks. Each additional equality constraint is adjusted by an independent unit move, using the cell whose endpoint tuple has a single letter \(1\) at the positive endpoint of that block and changing the landmark letter \(1\to2\). Because every tuple cell has linear size, we recover the same uniform singleton intensity lower bound, and there are only \(O_k(1)\) cross-endpoint pairs to control when splitting the small and dense phases. After whitening by the marginal block covariances, the joint dense Gaussian covariance matrix has identity blocks on the diagonal and off-diagonal blocks of Frobenius norm \(o(1)\); its trace-zero perturbation therefore has log determinant \(o(1)\). As in the two-block case, the small-row factors cancel, giving uniform relative factorization of the joint collision probability into the product of the \(k\) individual collision atoms.
+
+Since there are \((1+o(1))q^{2kn}/2^k\) typical ordered \(k\)-tuples of unordered pairs, combining our single-atom asymptotic with the bounds above shows that \(\mathbb E[(M_n)_k]\to\Lambda_q(y)^k\) for every fixed \(k\). Because the factorial moments uniquely determine the Poisson distribution, \(M_n\) converges in distribution to a Poisson random variable with mean \(\Lambda_q(y)\). The omitted ordinary collisions vanish in probability, so the full ordinary collision count has the same asymptotic distribution. Finally, the difference between the ordinary and outer collision counts also vanishes in probability: by the exact selector ratio from Section~\ref{sec:classical-birthday}, the expected difference is \(O(p^2)\) times the bounded expectation of the full ordinary count. This establishes both claimed Poisson limits without needing higher moments of the discarded pairs.

@@ -1,0 +1,217 @@
+\section{The exact noisy endpoint}\label{sec:noisy-exact}
+\begin{theorem}\label{thm:noisy-exact}
+Fix \(B>0\) and \(E=\lfloor e^{Bn^{1/3}}\rfloor\). At
+\(K=\kappa_{\rm noise}n^{-5/6}e^{(C+2B)n^{1/3}}\), the probability
+of recovering all binary faces under budget \(E\) tends to zero.
+\end{theorem}
+
+\begin{proof}
+We prove failure at the exact noisy endpoint by applying the second moment
+method to a weighted count of confusable opposite-face pairs of codimension
+near the optimal value. The main idea is to split the distance-histogram rows
+into dense rows, where we enforce an exact \(\ell^1\) constraint, and nondense
+rows, where we exponentially tilt the counts and truncate to a narrow window
+around the tilted mean so that every positively weighted pair is guaranteed to
+be confusable.
+
+Let \(r\) be the even codimension nearest to \(\rho_*n\), and consider its
+\(N=\binom nr2^{r-1}\) opposite-face candidates.
+Put \(s=n^{1/3}\), \(W=n^{2/3}\), \(v=r/(4n)\),
+\(R=\sqrt{2vC}\), \(\tau=RW/(2E)\), and \(\gamma=1/10\).
+As before, for each \(j<r/2\), write \(S_j=H_j-H_{r-j}\) for the signed
+difference between the landmark counts at distance \(j\) and distance \(r-j\),
+and let \(\lambda_j=K\prob(\Bin(r,1/2)=j)\) be their common expected count.
+We call a row dense if \(\lambda_j\ge E^2e^{4n^\gamma}\).
+There are \(m=RW+O(sn^\gamma)\) dense rows. Let \(T\) denote the
+sum of \(|S_j|\) over all nondense rows.
+
+\step{A weight supported at the exact budget.}
+To control the nondense rows, we tilt each nondense row by the factor
+\(e^{-\tau |S_j|}\) while preserving independence across rows. Under this
+tilted law, we have \(\ex T=O(q_0/\tau)\) and
+\(\operatorname{Var}T=O(q_0/\tau^2)\), where \(q_0=O(sn^\gamma)\) bounds the
+number of nondense rows satisfying \(\lambda_j\tau^2\ge n^{-3}\). The bound on
+the size of this shoulder of nondense rows follows from Stirling's
+approximation.
+
+To justify these moment estimates, we partition the nondense rows into three
+groups. For shoulder rows with \(\lambda_j\le\tau^{-2}\), the weight is a
+decreasing function of \(|S_j|\), so monotone weighting bounds the tilted
+moments by the unweighted ones, whose second moment is at most \(2\lambda_j\).
+For the remaining shoulder rows, the local lower bound on point probabilities
+over \(|S_j|\le\tau^{-1}\) shows that the normalizing constant is
+\(\gtrsim1/(\tau\sqrt{\lambda_j})\); combining this with the maximum point
+probability bounds the weighted first and second absolute moments by
+\(O(\tau^{-1})\) and \(O(\tau^{-2})\) after normalization. Finally, the
+remaining light rows have total tilted first and second absolute moments
+\(o(\tau^{-1})\) and \(o(\tau^{-2})\) by Cauchy--Schwarz and their
+\(n^{-3}\) intensity cutoff.
+
+Now let \(T_+,T_-\) be the tilted mean of \(T\) plus and minus \(\log n\)
+times the uniform standard-deviation bound \(O(\sqrt{q_0}/\tau)\), clipping
+\(T_-\) below at zero. Assign each opposite-face candidate the weight
+\(Y=e^{\tau(T_+-T)}\) if \(T\in[T_-,T_+]\) and its dense \(\ell^1\) norm
+is at most \(2E-T_+\), and assign it weight zero otherwise. Whenever a
+candidate has positive weight, its total \(\ell^1\) norm across all rows is at
+most \(2E\), so positive weight implies confusability. By Chebyshev's
+inequality, restricting to this window preserves a \(1-o(1)\) fraction of the
+tilted tail mean. Moreover, because \(T\) lies within the window below \(T_+\)
+on the support of \(Y\), we have the uniform bound
+\(\sup Y\le e^{O(\sqrt{q_0}\log n)}=e^{o(s)}\).
+
+\step{The mean at the order-\(s\) scale.}
+We next compute \(\log\ex Y\) up to \(o(s)\) and verify that the expected
+total weight \(N\ex Y\) grows exponentially on the \(s\) scale. Uniformly over
+all target vectors in the dense \(\ell^1\) ball, the point probabilities on the
+dense rows equal \((1+o(1))\prod_{\rm dense}(4\pi\lambda_j)^{-1/2}\); the
+Fourier estimate proved below also establishes this uniformity. By standard
+composition bounds and Stirling's formula, the integer \(\ell^1\) ball of
+radius \(Q\) on \(m\) rows has log volume
+\(m\log(2eQ/m)+O(\log m)+o(1)\) whenever \(Q\gg m^2\). Taking
+\(Q=\lfloor 2E-T_+\rfloor\), the log volume loses
+\(mT_+/(2E)+O(q_0^2/W)\) relative to a ball of radius \(2E\). Because
+\(|m-RW|=O(q_0)\), the factor \(e^{\tau T_+}\) in the weight cancels this
+volume loss up to \(O(q_0^2/W)=o(s)\).
+
+Write \(M_j=\ex e^{-\tau|S_j|}\). On every dense row, we have
+\(M_j=(1+o(n^{-1}))/(\tau\sqrt{\pi\lambda_j})\), which follows from the
+normal comparison proved below together with the fact that
+\(\tau\sqrt{\lambda_j}\) is exponentially large in \(n^\gamma\).
+Substituting this identity into the product of the dense atom probability, the
+ball volume, and the nondense tilted expectation, and using
+\(m+m\log(RW/m)=RW+O(q_0^2/W)\), gives
+\[
+ \log\ex Y=2E\tau+\sum_{j<r/2}\log M_j+o(s).
+\]
+
+To evaluate the sum on the right, let \(G\) be a standard normal random
+variable and define \(\phi(y)=\ex e^{-y|G|}\). We show that the sum of
+\(\log M_j\) differs by \(o(1)\) from the sum of
+\(\log\phi(\tau\sqrt{2\lambda_j})\). For rows with
+\(\lambda_j<e^{n^{1/4}}\), both absolute logarithms are
+\(O(\tau\sqrt{\lambda_j})\), which is negligible even after summing over all
+such rows. On the remaining rows, we use the Poisson kernel with parameter
+\(e^{-\tau}\) as a probability measure on frequencies, since its integer
+Fourier coefficients are \(e^{-\tau|k|}\). Complement pairing allows us to
+replace the Bernoulli counts by Poisson counts uniformly across rows, with a
+relative error that is exponentially small in \(n\). The marginal
+characteristic function localizes to the interval
+\(|\theta|\le e^{n^\gamma}/\sqrt{\lambda_j}\). On this interval, the
+characteristic function has a Gaussian quadratic exponent with uniform error
+\(O(e^{4n^\gamma-n^{1/4}})\), and the kernel density equals
+\(\tau/[\pi(\tau^2+\theta^2)]\) up to a relative factor of
+\(1+O(\tau+\theta^2)\). Extending the quadratic integral from this interval to
+the whole real line costs a superexponentially small amount, which is
+negligible relative to its \(e^{-O(s)}\) main term. The extended Cauchy kernel
+integral evaluates to exactly \(\phi(\tau\sqrt{2\lambda_j})\). Because all
+errors are \(o(n^{-1})\) per row, their total across all rows is \(o(1)\).
+The dense asymptotic formula for \(M_j\) also follows from substituting
+\(t=y|G|\) in the normal integral for \(\phi\).
+
+Now reindex the rows by \(u=r/2-j\ge1\) and set \(t_u=Cs-u^2/(2vn)\).
+As in Section~\ref{sec:noiseless-exact}, uniformly in the moderate window of
+rows, the fair-binomial relative entropy and Stirling prefactor give
+\[
+ \tau\sqrt{2\lambda_j}
+ \le e\sqrt{2/\pi}\,e^{(t_u+\epsilon_n)/2},
+ \qquad \epsilon_n=O(n^{-2/3}),
+\]
+with the constant determined by \(\kappa_{\rm noise}\); outside the moderate
+window, Hoeffding's inequality gives negligible total intensity.
+Write \(z=t_u+\epsilon_n\). Applying Jensen's inequality gives
+\[
+ \log\phi(e\sqrt{2/\pi}\,e^{z/2})
+ \ge -(1+z/2)\mathbf1_{z>0}-b(z),
+ \quad
+ b(z)=
+ \begin{cases}
+ (2e/\pi)e^{z/2},&z\le0,\\
+ (\pi/(2e^2))e^{-z},&z>0.
+ \end{cases}
+\]
+The first branch follows directly from Jensen's inequality and
+\(\ex |G|=\sqrt{2/\pi}\). For the second branch, we rewrite the normal
+integral as \(\phi(y)=\sqrt{2/\pi}\,y^{-1}\ex e^{-X^2/(2y^2)}\) with \(X\) a
+mean-one exponential random variable (whose second moment is two) and then
+apply Jensen's inequality. Integrating \(b\) yields
+\(\int b=4e/\pi+\pi/(2e^2)<3.68\). There are \(RW+O(1)\) levels with positive
+\(z\), and the sum of the half-quadratic terms over those levels is
+\(a_{r/n}(C)n/2-Cs/4+O(1)\). The shoulder Riemann-sum argument from
+Section~\ref{sec:noiseless-exact} gives
+\(\sum b(z)=(v/R)s\int b+o(s)\). Combining these estimates with \(2E\tau=RW\)
+and Stirling's approximation for \(N\), we obtain
+\[
+ \log(N\ex Y)\ge (C/4-3.68v/R)s+o(s)\ge cs
+\]
+for a positive fixed constant \(c\). Indeed, evaluating at \(\rho=1/2\) shows
+that \(C>3.3\), and since \(v/R\le1/\sqrt{8C}\), the coefficient of \(s\) is
+strictly positive. Rounding the maximizing codimension to the nearest even
+integer changes the extensive cancellation by only \(O(1)\).
+
+\step{The relative joint bound.}
+To finish the second moment proof, we bound the joint second moment across all
+pairs of opposite-face candidates and show that the relative variance tends to
+zero. We start with the typical pairs of
+Section~\ref{sec:noiseless-face-proof}, defined using the signed-overlap cutoff
+\(n^{-1/8}\). For prescribed dense targets on both candidates, we represent the
+joint weight in frequency space using Haar Fourier measure on dense rows and
+the Poisson-kernel measure on nondense rows. Complement pairing, uniform
+Poissonization, and projecting out distant rows of total intensity \(o(1)\)
+work just as in the previous proofs. On every retained row with
+\(\lambda_j\ge e^{n^{1/4}}\), we apply the neutral singleton bound
+\(\lambda_j e^{-O(n^{1/12}+\log n)}\) from the strict noisy case. This
+localizes the integral to the core region
+\(|\theta_j|\le e^{n^\gamma}/\sqrt{\lambda_j}\) on all such rows, because the
+off-core contribution is negligible even compared to the \(e^{-O(n)}\) product
+of single-core integrals.
+
+On the remaining light rows, we keep the full fundamental frequency interval.
+Cross terms involving any light row are \(o(1)\) uniformly by the shell-pair
+intensity bound from Section~\ref{sec:noiseless-face-proof}: within a block,
+the sum of the \(\lambda_j|\theta_j|\) terms over light rows is at most
+\(\pi n e^{n^{1/4}}\), while the corresponding sum on the localized rows is at
+most \(n\sqrt K e^{n^\gamma}\). Dividing their product by \(K\) and allowing
+for the \(e^{o(s)}\) intensity correction shows that these cross terms vanish.
+The remaining light-row marginal weights have product \(1+o(1)\). On the core,
+the dense target phases are also \(1+o(1)\) uniformly, because the dense
+targets satisfy \(\ell^1\le2E\) and the dense frequencies obey the core cutoff.
+
+After absorbing a uniform \(o(1)\) quartic error on the core, we scale every
+localized frequency by \(\sqrt{2\lambda_j}\). Under this rescaling, each
+marginal probability density on the core is proportional to a standard Gaussian
+times an even decreasing function of absolute value, coming from the core
+cutoff and the Poisson kernel. The normalized coordinates are therefore
+independent within each marginal and centered 1-subgaussian: by monotone
+weighting, their \(\cosh(tx)\) expectations are bounded above by those of the
+standard Gaussian. By the signed Walsh cross-Gram estimate, the normalized
+cross block \(T_0\) has Frobenius norm \(o(1)\). For independent marginal
+vectors \(U,V\) drawn from the rescaled core distributions, Jensen's
+inequality and Gaussian linearization give
+\[
+ 1\le\ex e^{-U^{\mathsf T}T_0V}
+ \le\det(I-T_0T_0^{\mathsf T})^{-1/2}=1+o(1).
+\]
+To obtain the upper estimate, condition on \(U\) and apply subgaussianity to
+\(V\); then represent the resulting factor \(e^{\|T_0^{\mathsf T}U\|^2/2}\) by
+an auxiliary normal linear moment and apply subgaussianity to \(U\). Thus the
+mixed joint atom is \(1+o(1)\) times the product of its single-candidate
+integrals, uniformly over both dense targets. Summing over both dense balls,
+using the untruncated tail weights as a joint upper bound, and applying the
+relative single-candidate truncation estimate handles all typical pairs.
+
+The remaining pair classes are all negligible relative to the squared mean.
+Atypical fixed-contraction pairs satisfy the same shell bounds as before, now
+incurring at most an \(\exp(o(s))\) weight loss per factor against an
+\(\exp(-\Omega(n^{3/4}))\) count loss. For distinct near partners, we use the
+two-shift forest of Section~\ref{sec:noiseless-exact} and condition on all
+landmarks outside its cells. On the support of both weights, the concatenated
+folded vector has \(\ell^1\) norm at most \(4E\). Summing along a fundamental
+cut therefore confines each independent cell count to an interval of length at
+most \(8E+1\). Using this interval bound in place of the single-atom factor
+preserves the full two-half leading rate at \(A-2B=C\), and the number of
+near-partner pairs keeps the same extensive entropy margin because
+\(\ex Y=e^{-a_{r/n}(C)n/2+o(n)}\). Finally, identical pairs contribute at most
+\((\sup Y)N\ex Y\), which is negligible because the log mean is positive on the
+\(s\) scale and \(\sup Y=e^{o(s)}\). Hence the relative variance tends to zero,
+proving failure.
+\end{proof}

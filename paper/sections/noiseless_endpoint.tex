@@ -1,0 +1,79 @@
+\section{The exact noiseless endpoint}\label{sec:noiseless-exact}
+\begin{theorem}\label{thm:noiseless-exact}
+For noiseless recovery at the critical landmark mean \(K=\kappa_*\sqrt n\,e^{C n^{1/3}}\), the probability of resolving all binary faces tends to zero.
+\end{theorem}
+
+At the exact multiplier \(\kappa_*\), both the extensive order-\(n\) terms and the order-\(W\) terms cancel in the first moment of opposite-face collisions. We therefore track the order-\(s\) contribution to show that the mean number of collisions still diverges exponentially in \(s\), and then establish a sharper joint collision bound for distinct close candidate pairs so that the second moment method succeeds.
+
+\begin{proof}
+\step{First-moment lower bound.}
+Take the even codimension \(r\) nearest \(\rho_*n\) and the same family of \(N=\binom nr2^{r-1}\) opposite-face candidate pairs. Set \(v=r/(4n)\), \(R=\sqrt{2vC}\), \(s=n^{1/3}\), and \(W=n^{2/3}\), and index each row in the lower half band by its offset \(u=r/2-j\in\{1,\ldots,r/2\}\) from the center. Define \(t_u=Cs-u^2/(2vn)\). In any fixed moderate window \(u\le MW\), Stirling's approximation gives
+\[
+ \lambda_j\le (4\pi)^{-1}e^{t_u+\epsilon_n},
+ \qquad \epsilon_n=O(n^{-2/3}).
+\]
+Indeed, the symmetric relative entropy is at least its quadratic term, the local prefactor changes by \(O(u^2/r^2)=O(n^{-2/3})\) in the logarithm, and rounding \(r\) changes \(\kappa_*/\kappa_0(v)\) by \(1+O(n^{-1})\). Farther out beyond this window, the total intensity is \(o(1)\) once \(M\) is chosen large and fixed.
+
+Consider the negative log zero-atom probability for the difference of two independent Poisson variables of mean \(\lambda\),
+\[
+ g(\lambda)=-\log\left(\frac{1}{2\pi}
+       \int_{-\pi}^{\pi}e^{-2\lambda(1-\cos\theta)}\,d\theta\right).
+\]
+This function is increasing and nonnegative. As in Section~\ref{sec:noiseless-face-proof}, passing from Bernoulli variables to Poisson variables costs only \(o(1)\) in the logarithm of the full collision probability \(P_1\), so it suffices to bound the sum of \(g(\lambda_j)\) over the half band.
+
+We now bound the excess of \(g(e^t/(4\pi))\) over \(\tfrac12t_+\). For \(t\le0\), requiring both Poisson counts to vanish gives \(g(e^t/(4\pi))\le e^t/(2\pi)\). For \(t>0\), substituting \(1-\cos\theta\le\theta^2/2\) and integrating over the fundamental interval yields
+\[
+ g(e^t/(4\pi))\le
+ \tfrac12 t-\log\operatorname{erf}\bigl(\sqrt{\pi}e^{t/2}/2\bigr).
+\]
+Using the bound \(1-\operatorname{erf}x\le e^{-x^2}\) for \(x\ge0\), an integrable upper bound for the correction to \(\tfrac12t_+\) is
+\[
+ b(t)=
+ \begin{cases}
+ e^t/(2\pi),&t\le0,\\
+ \displaystyle
+ \frac{e^{-(\pi/4)e^t}}{1-e^{-\pi/4}},&t>0.
+ \end{cases}
+\]
+Applying \(e^t\ge1+t\) on the positive half-line gives the explicit integral bound
+\[
+ \int_{\mathbb R} b(t)\,dt
+ \le \frac1{2\pi}+
+   \frac{e^{-\pi/4}}{(\pi/4)(1-e^{-\pi/4})}<1.23 .
+\]
+
+Next we evaluate the two sums over \(u\ge1\). The half-band shell sum, which omits the central row, satisfies
+\[
+ \tfrac12\sum_{u\ge1}(t_u+\epsilon_n)_+
+      =\tfrac12 a_{r/n}(C)n-\tfrac14Cs+O(1).
+\]
+This identity follows either by summing the quadratic directly up to its positive boundary or by the trapezoid estimate, since the last boundary interval costs \(O(1)\); the shift \(\epsilon_n\) likewise contributes only \(O(1)\). Near the boundary \(u=RW\), the spacing between consecutive values of \(t_u\) is asymptotic to \(R/(vs)\), which yields the Riemann-sum asymptotic
+\[
+ \sum_{u\ge1} b(t_u+\epsilon_n)
+       =\frac{vs}{R}\int_{\mathbb R}b(t)\,dt+o(s).
+\]
+To justify this Riemann sum, restrict first to bounded values of \(t\). For \(u\ge RW/2\), the spacing is bounded below by a constant times \(s^{-1}\), so the two exponential tails of \(b\) contribute an arbitrarily small \(O(s)\) remainder. For \(u<RW/2\), the positive argument is of order \(s\), making that portion of the sum negligible. Both here and in the previous display, we may extend the sum in \(u\) past the moderate window because the artificial far tails decay exponentially.
+
+At the optimizing fraction, \(a_{\rho_*}(C)/2=h_{\rm face}(\rho_*)\), and rounding \(r\) alters this extensive cancellation by only \(O(1)\). Combining Stirling's formula for \(N\) with the preceding bounds gives
+\[
+ \log(NP_1)\ge
+ \left(\tfrac14 C-1.23\frac vR\right)s+o(s)\ge c s
+\]
+for a positive fixed constant \(c\). To check positivity, note that evaluating the variational expression at \(\rho=1/2\) yields \(C>3\), while \(v\le1/4\) implies \(v/R\le 1/\sqrt{8C}\).
+
+\step{Close-pair bound and second moment.}
+We now strengthen the joint collision bound for distinct close candidate pairs, because using only a single candidate's atom would lose too much at this exact endpoint. Orient each pair of opposite-assignment candidates so that their prescribed assignments almost agree whenever \(|a_0-b_0|>(1-\delta)r\); their common agreeing block then has size \(a_0>(1-\delta)r\).
+
+Because the two pairs are distinct, they must disagree on at least one shared or exclusive coordinate. Reserve one such coordinate. On all other off-block positions, namely the conflict block and the two exclusive blocks, fix the mismatch counts at their respective binomial modes. The two possible choices for the reserved bit define two disjoint classes of landmarks, each having polynomial relative mass. In each query, the distance offsets coming from these fixed off-block coordinates lie within \(O(1)\) of \((r-a_0)/2\). Moreover, the resulting relative shifts \(\Delta_1,\Delta_2\) between the two queries differ: flipping the reserved bit changes the offset difference by one if the reserved coordinate is exclusive, and by two if it is a conflicting coordinate.
+
+Within each class, vary the mismatch count on the common agreeing block across the lower moderate band, staying a bounded number of rows below the center so that both folded signs are positive. In the two blocks of discrepancy coordinates, each cell then produces a column \(e_j+e_{j+\Delta_i}\), with the two summands lying in separate blocks. Negate the second block to view these columns as oriented incidence vectors in a bipartite graph. The columns form the edges of two fixed-shift matchings. Any cycle in this graph would have to alternate between the two matchings, but every two-step move applies a fixed nonzero translation to the row index, so no cycle can exist.
+
+Because these disjoint cells carry independent counts and have an acyclic incidence graph, taking the maximal atom product across the two half bands yields the joint collision bound
+\[
+ \prob(\text{both collide})
+       \le \exp\left[-\sqrt{a_0/r}\,a_{r/n}(C)n+o(n)\right]
+\]
+uniformly over such distinct close neighbors. Here the shell-volume calculation is the usual half-band integral for the Binomial\((a_0,1/2)\) common block applied twice, and the polynomial mass factors and bounded offsets contribute only \(o(n)\).
+
+Finally, we assemble the second moment. The number of close candidate pairs is at most \(N\exp(O(\delta\log(1/\delta))n)\). Since \(P_1=\exp[-a_{r/n}(C)n/2+o(n)]\), their total contribution relative to \((NP_1)^2\) is exponentially small for small fixed \(\delta\). Identical pairs contribute \(NP_1\), which is negligible relative to \((NP_1)^2\) by the positive order-\(s\) lower bound on the log mean. Typical pairs still have relative joint atom \(1+o(1)\), and the remaining atypical fraction is controlled by the fixed-contraction estimate of Section~\ref{sec:noiseless-face-proof}. The relative variance therefore tends to zero, proving that an opposite collision occurs with probability tending to one.
+\end{proof}

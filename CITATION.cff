@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "Please cite the paper when using the results or verification code."
+title: "Sharp thresholds for anonymous recovery in Hamming graphs"
+type: software
+authors:
+  - family-names: Li
+    given-names: Brandon
+    email: brandon.li.gn@gmail.com
+    affiliation: "Independent researcher, Great Neck, New York, USA"
+license: MIT
+repository-code: "https://github.com/brandonlign/hamming"
+keywords:
+  - Hamming graphs
+  - hypercube
+  - multiset dimension
+  - resolving sets
+  - sharp thresholds
+  - random landmarks
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Li
+      given-names: Brandon
+  title: "Sharp thresholds for anonymous recovery in Hamming graphs"
+  year: 2026

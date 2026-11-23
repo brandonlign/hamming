@@ -1,0 +1,149 @@
+\section{Which binary faces cause failure above the cutoff?}
+A face fixing a positive fraction of coordinates governs the first-moment
+cutoff, but the residual failures above it come from faces fixing at most two
+coordinates.
+
+\begin{corollary}\label{cor:rare-faces}
+Take the binary model and error budget of Theorem~\ref{thm:box}, strictly
+above the cutoff, and write \(K=e^{A n^{1/3}}\). Let \(F\) be the event that
+some pair of faces is confusable, and let \(Z\) count all unordered confusable
+pairs. Then
+\[
+ \prob(F)\sim\frac{n(n-1)(4E+1)}{\sqrt{\pi K}},
+ \qquad \ex Z\sim 3\prob(F).
+\]
+For each coordinate \(i\), let \(U_i=\sum_{v\in S}(-1)^{v_i}\).
+If we discard a landmark sample whenever two entries of the list
+\((U_1,-U_1,\ldots,U_n,-U_n)\) are at distance at most \(4E\),
+the discard probability is \((1+o(1))\prob(F)\). Conditional on retaining
+the sample,
+\[
+ \lim_{n\to\infty}n^{-1/3}\log\prob(F\mid\text{retained})=-D,
+ \qquad D=A-2B.
+\]
+\end{corollary}
+
+\begin{proof}
+We show that strictly above the cutoff, failure is dominated by pairs of faces
+whose distance histograms differ along a single nonloop edge, and that
+filtering out these one-edge collisions drops the failure rate to the two-edge
+scale. We first rule out pairs of unequal, large, or multi-edge codimension
+by union bounds, then classify all one-edge pairs and compute their
+probabilities and pairwise overlaps by Fourier analysis, and finally prove the
+matching conditional lower bound using a fixed codimension-three opposite pair.
+
+\step{Eliminating high codimensions and multi-edge pairs.}
+Put \(s=n^{1/3}\) and \(x=(E+1)/\sqrt K=e^{-Ds/2+o(s)}\).
+For pairs of faces with different codimensions, the empirical-mean bound of
+Section~\ref{sec:sum-codim} makes the summed failure probability
+superexponentially small on the \(s\) scale.
+For equal codimension \(r\ge\varepsilon n\), the strict first-moment margin
+above the cutoff gives an exponentially small summed probability on the \(n\)
+scale.
+For intermediate equal codimensions \(1\le r<\varepsilon n\), the robust forest
+estimate of Section~\ref{sec:robust-forest} bounds the confusability
+probability of a single pair by
+\[
+ \exp[-c\Lambda\min(r,\sqrt{r\Lambda})],\qquad \Lambda=Ds .
+\]
+Take \(\varepsilon>0\) small. For \(\Lambda<r<\varepsilon n\), the logarithm
+of the number of pairs is at most \(2r\log(2en/r)\), which is at most half the
+exponent in absolute value once \(\varepsilon\) is small enough; summing over
+this range costs at most \(\exp[-\Omega(n^{2/3})]\). For \(r\le \Lambda\), the
+same pair count is absorbed by half of the exponent \(c\Lambda r\). Therefore,
+for any fixed \(M\), choosing a sufficiently large fixed \(R\) makes the total
+contribution from all codimensions above \(R\) equal to \(o(e^{-Ms})\).
+
+Now consider pairs of equal codimension \(r\le R\). Draw an edge between two
+distance levels for each distinct attainable unordered nonloop pair of
+distances from a landmark to the two faces. Any two distinct edges form a
+forest. Each chosen oriented edge is realized by some assignment of bits to the
+union of the two face supports, defining a cell of density at least
+\(2^{-2R}\). Condition on all landmarks outside these disjoint cells. Whenever
+the two faces are confusable, each of the two forest cuts has an imbalance of
+absolute value at most \(2E\), because the total positive histogram discrepancy
+is at most that value. The two-cut bound therefore gives probability
+\(O_R(x^2)\) for each pair with at least two edges. Summing over all such pairs
+with \(r\le R\) gives \(O_R(n^{2R}x^2)\), which is negligible against \(n^2x\).
+
+\step{Classifying one-edge pairs.}
+It remains to classify pairs of equal codimension that have only one nonloop
+edge. A landmark lying in the first face but not in the second produces some
+edge \(\{0,k\}\); complementing all bits of that landmark produces the edge
+\(\{r,r-k\}\), so having only one edge forces \(k=r\). Let \(b\) be the number
+of conflicts between the two faces on their common support, and let \(c\) be
+the size of each face's exclusive support. As a landmark varies over the first
+face, its distance to the second face ranges over all integers from \(b\) to
+\(b+c\). If \(c>0\) and \(r\ge2\), this range includes an interior distance
+level, which produces a second edge and contradicts the one-edge assumption.
+If \(c=0\), the two faces share the same support and must prescribe opposite
+bits on every coordinate of that support. Their attainable nonloop pairs are
+then \(\{j,r-j\}\), so there are \(\lceil r/2\rceil\) such edges. Requiring
+only one edge thus implies that the one-edge pairs are precisely the pairs of
+distinct codimension-one faces and the opposite pairs of codimension two with
+common support.
+
+For two codimension-one faces on different coordinates, the imbalance in the
+single nonloop edge is, up to sign, \((U_i\pm U_j)/2\). An opposite pair on
+the two-coordinate support \(\{i,j\}\) has the exact same imbalance, by the
+identity
+\(\mathbf1_{\text{both match}}-\mathbf1_{\text{both mismatch}}
+=(\varepsilon_i+\varepsilon_j)/2\),
+where \(\varepsilon_i,\varepsilon_j\) are the prescribed signs multiplied by
+the respective coordinate signs. Thus, for every \(i<j\), each of the two
+events
+\[
+ \big| (U_i\pm U_j)/2\big|\le 2E
+\]
+corresponds simultaneously to three confusable pairs: two pairs of
+single-coordinate faces and one opposite pair of codimension two. Separately,
+single-coordinate opposites on the same coordinate give the \(n\) events
+\(|U_i|\le2E\), which contribute \(O(nx)\) in total and are negligible
+compared to \(n^2x\).
+
+\step{Probabilities and pairwise overlaps.}
+For any dominant event, the linear form is the difference of two independent
+\(\Bin(2^{n-2},K2^{-n})\) random variables, which has variance \(K(1-p)/2\)
+with \(p=K2^{-n}\). On the fundamental frequency interval, its characteristic
+function is \(\big(1-2p(1-p)(1-\cos t)\big)^{2^{n-2}}\). After rescaling by
+the standard deviation, this characteristic function tends to the standard
+Gaussian characteristic function and is dominated by \(e^{-c't^2}\) on the
+rescaled interval. Furthermore, the Fourier phase for atom \(k\) tends to one
+uniformly for \(|k|\le2E=o(\sqrt K)\) on compact frequency sets. By Fourier
+inversion and dominated convergence, each dominant event has probability
+\((1+o(1))(4E+1)/\sqrt{\pi K}\).
+
+To bound pairwise overlaps, note that any two distinct dominant forms are
+linearly independent functions of at most four landmark bits. We can therefore
+choose two bit assignments with linearly independent contribution vectors and
+condition on all landmarks outside their two disjoint cells. For each
+permissible output pair of the two forms, at most one tuple of cell counts
+works. Because the binomial maximal atom on each cell is \(O(K^{-1/2})\), the
+intersection of two distinct dominant events costs \(O(x^2)\). Bonferroni's
+inequalities then give an aggregate overlap of \(O(n^4x^2)=o(n^2x)\), and the
+asymptotic equivalents for \(\prob(F)\) and \(\ex Z\) follow.
+
+\step{The filter and conditional failure rate.}
+The filtering rule removes precisely the one-edge events, and it can be checked
+by sorting the signed values and comparing adjacent differences. Its rejection
+probability follows from the same union estimate as above. Conditional on
+retaining the sample, no one-edge pair is confusable, so the bounds for pairs
+with two or more edges give a conditional log rate at most \(-D\).
+
+For the matching lower bound, fix a pair of opposite faces on a
+three-coordinate support, and write \(W_0,W_1\) for the signed count
+differences in the disjoint shell pairs \((0,3),(1,2)\). These are independent
+symmetric binomial differences, so the same Fourier estimate shows that
+\(|W_0|,|W_1|\le E\) has probability \(\Theta(x^2)\) and implies confusability.
+Let \(f_0,f_1\) be the corresponding single-landmark contribution functions.
+Then \(3f_0+f_1\) is the sum of the three prescribed coordinate signs, and
+\(f_0-f_1\) is their product. By orthogonality of the cube characters, no
+rejected form, which is a nonzero linear form supported on at most two
+coordinates, belongs to their span. Hence, for every rejected form, we can
+choose three bit assignments with linearly independent contribution vectors on
+the union of the at most five involved coordinates. Conditioning outside these
+three disjoint cells and applying three maximal atom bounds gives an
+intersection probability of \(O(x^3)\) with this fixed collision. Summing over
+all rejected forms yields a total overlap of \(O(n^2x^3)=o(x^2)\), proving the
+matching conditional lower rate.
+\end{proof}

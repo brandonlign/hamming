@@ -1,0 +1,8 @@
+classical endpoint boundary-cost upper bound: 1.328807542295400485
+rho_star: 0.365513896192696797
+C: 3.441746520638398345
+R_star: 0.793097150564229085
+kappa_noiseless: 0.060297876904915565
+kappa_noisy: 11.333347057019351378
+noiseless endpoint log-mean gain bound: 0.718719410523526896
+noisy endpoint log-mean gain bound: 0.436437143768747960

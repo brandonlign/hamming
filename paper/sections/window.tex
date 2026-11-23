@@ -1,0 +1,199 @@
+\section{Polynomial corrections at the two endpoints}
+Throughout the next three sections we introduce a polynomial factor and a constant prefactor into the landmark density, keeping the exponential scale fixed. Put $L=\log q$, $\sigma^2=(q-1)/q^2$, $R=\sqrt{2\sigma^2 A}$ and $a=(2/3)\sqrt{2\sigma^2}\,A^{3/2}$. The expected number of landmarks is $m_n=q^np=\kappa n^\beta e^{An^{1/3}}$, with fixed $q\ge2$, $A,\kappa>0$ and $\beta\in\mathbb R$. We include the lower endpoint $a=L$ as a benchmark for the typical-set method. Our main objective is to derive sharp first-moment estimates at the upper endpoint $a=2L$; Section~\ref{sec:classical-birthday} then establishes the corresponding probability threshold.
+
+\subsection{Shell volume}
+We begin by estimating the expected landmark count in each distance shell and summing its positive log part to obtain the shell-volume functional that governs both our typical-set and entropy bounds.
+
+Write $\pi_r$ for the shell probability (the probability that a uniformly random word lies at distance $r$ from a fixed query) and $\lambda_r=m_n\pi_r$ for the expected number of landmarks in shell $r$. For a vertex query, the distance from a uniform word has distribution $\mathrm{Bin}(n,1-1/q)$; for an edge query, it has distribution $\mathrm{Bin}(n-1,1-1/q)+\mathrm{Bern}(1-2/q)$ with independent summands. Set $\mu=n(1-1/q)$ for the mean vertex distance. Applying Stirling's formula uniformly over all shells satisfying $|r-\mu|\le Dn^{2/3}$, for any fixed $D>R$, yields
+\[
+ \log\lambda_r=An^{1/3}-\frac{(r-\mu)^2}{2\sigma^2 n}
+ +(\beta-\tfrac12)\log n+O(1).
+\]
+On this window the cubic Taylor remainder of the binomial log-probability is uniformly bounded, and the bounded shifts introduced by the edge mixture do not change the error term.
+
+We call the shells with $|r-\mu|\le Dn^{2/3}$ the retained shells and the remaining shells the outside shells. Choose $D$ large enough that Hoeffding's inequality bounds the sum of the outside shell means by $e^{-c n^{1/3}}$. Writing $x_+=\max(x,0)$ and using the convention that shells with zero mean contribute zero to the sum, we define the shell-volume functional
+\[
+ V=\tfrac12\sum_r(\log\lambda_r)_+
+ =an+R(\beta-\tfrac12)n^{2/3}\log n+O(n^{2/3}).
+\]
+To see this asymptotic, note that the half-integral of the clipped parabola with intercept $T=An^{1/3}+(\beta-1/2)\log n$ equals $(2/3)\sqrt{2\sigma^2 n}\,T^{3/2}$. Approximating this integral by its discrete Riemann sum incurs an error of $O(n^{1/3})$ by total variation, while summing the bounded shellwise errors over the retained shells costs $O(n^{2/3})$.
+
+\subsection{The lower endpoint}
+We next show that when $a=L$ and $\beta<1/2$, a typical-set counting argument forces exponentially many collisions for all three query types simultaneously with high probability.
+
+For any fixed query, the shell counts $M_r$ are independent binomial random variables with means $\lambda_r$. On the $K=O(n^{2/3})$ retained shells, define the fluctuation scale $s_r=\max(1,\sqrt{\lambda_r})$. Each normalized deviation $|M_r-\lambda_r|/s_r$ has mean and variance at most one, so by Chebyshev's inequality their sum across all retained shells is at most $2K$ except on an event of probability at most $1/K$. At the same time, since the outside shell means sum to $e^{-c n^{1/3}}$, Markov's inequality ensures that all outside shell counts vanish with probability $1-o(1)$.
+
+Histograms satisfying both conditions form a common typical set for all queries of a given type. Bounding the indicator of the sum constraint by an exponential weight and evaluating the resulting geometric series in each coordinate, the size of this typical set is at most
+\[
+ e^{2K}\prod_{r\ {\rm retained}}\sum_{z\in\mathbb Z}
+ e^{-|z-\lambda_r|/s_r}
+ \le e^{O(K)}\prod_{r\ {\rm retained}}s_r=e^{V+O(n^{2/3})},
+\]
+by geometric summation.
+
+Applying Markov's inequality to the fraction of atypical queries shows that, with high probability, at least half of the queries of each type fall in the typical set. For outer vertices, removing the randomly selected landmarks eliminates only $o(q^n)$ vertices with high probability. When $a=L$ and $\beta<1/2$, the shell-volume formula above implies that the typical set has size $o(q^n)$. Applying the Cauchy--Schwarz inequality to the bucket occupancies within the typical set then shows that the collision counts for vertices, outer vertices and edges are simultaneously at least
+\[
+ \exp\{Ln+R(1/2-\beta)n^{2/3}\log n-O(n^{2/3})\}
+\]
+with high probability. In particular, this covers the unmodified model $\beta=0$, $\kappa=1$. The matching upper rate $L$ on the $n$ scale still follows from the earlier first-moment bound, which is unaffected by an $O(\log n)$ perturbation of $\log m_n$.
+
+\subsection{The upper endpoint}
+At the upper endpoint $a=2L$ with $\beta<1/2$, we lower-bound the expected number of collisions for each query type. The strategy is to represent the histogram discrepancy of a pair via an exchanging involution and lower-bound the collision probability using Shannon entropy.
+
+For any two vertices, choose an isometric involution of the Hamming graph that exchanges them by applying coordinatewise transpositions. For two parallel edges sharing the same active letter-pair, choose such an involution that fixes the active coordinate and exchanges the two edges on the remaining coordinates. Decompose the vertex set into orbits of this involution. Fixed words and words equidistant from the two queries contribute zero to the histogram discrepancy. Grouping each two-point orbit into a pair of opposite contributions, the histogram discrepancy takes the form $X-X'$, where $X$ and $X'$ are independent, identically distributed sums over one chosen representative from each two-point orbit, each weighted by an independent Bernoulli coefficient multiplying a signed basis vector $e_r-e_s$. For a pair of outer vertices, we first condition on the two endpoints being absent from the landmark set, which has probability $(1-p)^2$, and then omit their two-point orbit from the sum.
+
+Because $X$ and $X'$ are independent and identically distributed, Jensen's inequality gives $-\log\Pr(X=X')\le H(X)\le\sum_r H(X_r)$, where $H$ denotes Shannon entropy. On each retained coordinate, counting contributions from both shells of each incident orbit yields $\operatorname{Var}(X_r)\le2\lambda_r$. Adding an independent uniform random variable on $[-1/2,1/2]$ to an integer-valued variable converts its discrete Shannon entropy into differential entropy without changing its value. Because the Gaussian distribution maximizes differential entropy at a given variance, we obtain
+\[
+ H(X_r)\le\tfrac12\log(2\pi e(2\lambda_r+1/12))
+ \le\tfrac12(\log\lambda_r)_++O(1).
+\]
+On each outside shell, the positive and negative counts contributing to $X_r$ each have mean at most $\lambda_r$, so $H(X_r)\le2g(\lambda_r)$, where $g(t)=(1+t)\log(1+t)-t\log t$ is the maximum Shannon entropy of a nonnegative integer-valued random variable with mean $t$. Since the outside means sum to $e^{-c n^{1/3}}$, the outside entropies sum to $o(1)$. Summing over all coordinates, the collision probability is at least $e^{-V-O(n^{2/3})}$, up to the endpoint factor $(1-p)^2$ for outer vertices.
+
+To count pairs, restrict to vertex pairs at a single distance within two of $\mu$, chosen to be even in the binary case; Stirling's formula gives $\exp(2Ln-O(\log n))$ such pairs. For edges, fix the active direction and letter-pair and count parallel pairs in the remaining cube at its own typical distance. Multiplying the pair count by the collision probability bound shows that at $a=2L$ and $\beta<1/2$, each expected collision count is at least
+\[
+ \exp\{R(1/2-\beta)n^{2/3}\log n-O(n^{2/3})\}.
+\]
+A diverging expectation does not by itself imply failure with high probability, even though this estimate already holds for the binary even-distance nonantipodal subfamily described above.
+
+\subsection{A sufficient range on the square-root scale}
+When $\beta=1/2$, the $n^{2/3}\log n$ term in $V$ vanishes and the leading correction shifts to the $n^{2/3}$ scale, controlled by the prefactor $\kappa$. By refining the shell expansion to $o(1)$ accuracy and replacing the $L^1$ typical set with a quadratic Gaussian constraint, we obtain a sufficient range $\kappa<\kappa_0$ for collisions at $a=L$ and diverging expected collisions at $a=2L$.
+
+Set $\beta=1/2$ and $\kappa_0=\sigma/(e\sqrt{2\pi})$. Introduce the rescaled shell coordinate $u=(r-\mu)/n^{2/3}$, the parabola $F(u)=A-u^2/(2\sigma^2)$ and the constant $c=\log\kappa-\tfrac12\log(2\pi\sigma^2)$. Uniformly for $|u|\le D$, Stirling's formula expands to
+\[
+ \log\lambda_r=n^{1/3}F(u)+c+\gamma_q u^3+o(1),
+\]
+where $\gamma_q$ is minus one sixth the third derivative of binary relative entropy in its first argument evaluated at its reference parameter $1-1/q$. On this window the quartic Taylor error is $O(n^{-1/3})$, the Stirling prefactor varies by $o(1)$, and replacing $n$ by $n-1$ or shifting a shell index by one (for the edge law) changes the exponent by $o(1)$.
+
+Partition the retained shells into three zones: call a shell interior if $n^{1/3}F(u)$ exceeds $6\log n$, exterior if it falls below $-6\log n$, and transition otherwise. The transition zone contains $O(n^{1/3}\log n)$ shells, each with $|\log\lambda_r|=O(\log n)$. By Markov's inequality, a fixed query has with high probability zero landmarks in all exterior and far-tail shells, and at most $n^9$ landmarks in every transition shell. Consequently, the transition shells contribute $o(n^{2/3})$ to both the log cardinality of the typical set and the orbit entropy.
+
+There are $K_0=2Rn^{2/3}+O(n^{1/3}\log n)$ interior shells, each satisfying $\lambda_r\gg n^6$. Consider the quadratic deviation statistic $Q=\frac12\sum_{\rm int}(M_r-\lambda_r)^2/\lambda_r$ over the interior shells. By independence of the shell counts and the binomial fourth central moment bound $\lambda+3\lambda^2$, the variable $Q$ has mean at most $K_0/2$ and variance $O(K_0)$. Chebyshev's inequality therefore gives $Q\le K_0/2+n^{1/2}$ with high probability. Weighting each integer histogram by a discrete Gaussian factor bounds the number of admissible interior configurations by
+\[
+ e^{K_0/2+n^{1/2}}\prod_{\rm int}(\sqrt{2\pi\lambda_r}+O(1)),
+\]
+where comparing the discrete sum to the Gaussian integral on its two monotone halves supplies the uniform additive error.
+
+In the orbit entropy argument of the previous subsection, the variance bound improves to $\operatorname{Var}(X_r)\le\lambda_r$ because every nonzero orbit incident to row $r$ contains at most one word in shell $r$ of the first query (in fact, exactly one word in shell $r$ of one of the two queries, so each orbit contributes at most one indicator to $X_r$). Each interior coordinate entropy is therefore at most $\tfrac12\log(2\pi e\lambda_r)+o(1)$ uniformly, while the exterior and far-tail entropies still sum to $o(1)$ by the geometric bound. Both the log typical-set size and the orbit entropy are thus bounded above by
+\[
+ \tfrac12\sum_{\rm int}\log\lambda_r+\tfrac{K_0}{2}\log(2\pi e)+o(n^{2/3})
+ =an+R\log(\kappa/\kappa_0)n^{2/3}+o(n^{2/3}).
+\]
+In evaluating the sum over the interior shells, the cubic term $\gamma_q u^3$ integrates to zero on $[-R,R]$ by oddness, and the clipped parabola integrates to $an$ as before.
+
+It follows that for $\kappa<\kappa_0$, the log collision count at $a=L$ is at least $Ln+R\log(\kappa_0/\kappa)n^{2/3}+o(n^{2/3})$ with high probability, while at $a=2L$ the log expected collision count is at least $R\log(\kappa_0/\kappa)n^{2/3}+o(n^{2/3})$. This sufficient constant $\kappa_0$ does not identify a sharp probability threshold.
+
+\section{The sharp first-moment window}
+We now determine the exact $n^{2/3}$-scale asymptotics of the expected collision count at $a=2L$, locating the sharp first-moment constant $\kappa_1$.
+
+Assume $a=2L$. Set $\kappa_1=\sigma/(2\sqrt{2\pi})$ and $B_n=R[(1/2-\beta)\log n+\log(\kappa_1/\kappa)]$. Letting $Z$ denote the collision count for any one of the three query types (vertices, outer vertices, or edges), we prove that
+\[
+ n^{-2/3}\log\mathbb E Z=
+ \begin{cases}B_n+o(1),&q\ge3,\\
+ \max(B_n,B_n/2)+o(1),&q=2.
+ \end{cases}
+\]
+At the critical exponent $\beta=1/2$, we write $B=B_n$. When $\kappa>\kappa_1$, the right-hand side is strictly negative, so Markov's inequality and a union bound imply that a single random landmark set resolves all three query types with high probability. When $\kappa<\kappa_1$, all three expectations diverge; the matching probability converse and endpoint are proved in Section~\ref{sec:classical-birthday}. At equality $\kappa=\kappa_1$, the $n^{2/3}$ scale alone does not determine the limiting expectation.
+
+\subsection{The common shell cost}
+We first isolate the interior shell set $I$ and compute the common negative-log collision cost $J_n$ that appears in both the lower and upper bounds below.
+
+For arbitrary fixed $\beta$, the refined shell expansion from the previous section acquires the additive term $(\beta-1/2)\log n$. Define the interior shell set $I$ to consist of all retained shells satisfying $n^{1/3}F(u)>(10+|\beta|)\log n$. On $I$ we have $\lambda_r\gg n^8$. The transition zone down to $-(10+|\beta|)\log n$ contributes $O(n^{1/3}\log^2 n)$ to the shell sums below, and the remaining shell means sum to $o(1)$. For both the vertex and edge shell laws,
+\[
+ J_n=\tfrac12\sum_{r\in I}\log(4\pi\lambda_r)
+ =an-B_n n^{2/3}+o(n^{2/3}).
+\]
+Indeed, the integrated parabola yields $an$, the odd cubic term integrates to zero, and the number of interior shells is $|I|=2Rn^{2/3}+O(n^{1/3}\log n)$. Each shell contributes the constant $\tfrac12\log(4\pi\kappa/\sqrt{2\pi\sigma^2})=\tfrac12\log(\kappa/\kappa_1)$, which combines with the $(\beta-1/2)\log n$ term to produce $-B_n n^{2/3}$.
+
+\subsection{Fourier lower bound}
+To match $J_n$ from below, we express the collision probability of any pair admitting an exchanging involution as a Fourier integral, lower-bound the integrand by a Gaussian, and eliminate the cross terms by symmetry and Jensen's inequality.
+
+For any pair of queries with an exchanging involution as constructed above, the characteristic function of the histogram discrepancy $X-X'$ factors over the two-point orbits of nonzero discrepancy, with each orbit contributing one nonnegative factor $1-2p(1-p)(1-\cos(\theta_r-\theta_s))$. Since $4p=o(1)$ and $1-\cos v\le v^2/2$, the product of these factors is bounded below by $\exp[-c_np\sum_{\rm orbits}(\theta_r-\theta_s)^2]$ for a sequence $c_n=1+O(p)>0$.
+
+Integrating over $[-\pi,\pi]$ in each coordinate with normalized Lebesgue measure expresses $\Pr(X=X')$ as the integral of this characteristic function. Expanding the squares $(\theta_r-\theta_s)^2$ in the Gaussian lower bound produces diagonal weights $e^{-c_npN_r\theta_r^2}$, where $N_r$ is the number of nonzero orbits incident to shell $r$, together with a sum of cross terms proportional to $\theta_r\theta_s$. Under the product probability measure obtained by normalizing the diagonal weights, each coordinate $\theta_r$ is symmetric around zero, so every cross product has mean zero. Applying Jensen's inequality to the cross terms and using $pN_r\le\lambda_r$ yields
+\[
+ \Pr(X=X')\ge \prod_r\frac1{2\pi}\int_{-\pi}^{\pi}
+ e^{-c_n\lambda_r\theta^2}\,d\theta .
+\]
+Evaluating the one-dimensional integrals by regime, each interior factor equals $(4\pi\lambda_r)^{-1/2}(1+o(1))$ uniformly. Each transition shell contributes at most $O(\log n)$ to the negative logarithm, and each exterior shell contributes $O(\lambda_r)$ by Jensen's inequality. Combining all shells gives the uniform lower bound $\exp[-J_n+o(n^{2/3})]$, retaining the harmless endpoint factor $(1-p)^2$ for outer queries.
+
+\subsection{Descending bundles for bulk pairs}
+We now prove the matching upper bound $\exp[-J_n+o_\delta(n^{2/3})]$ on the collision probability for all bulk pairs of queries. The strategy is to expose selected landmarks in descending order of distance deviation from the mean $\mu$: for bulk separations, conditional contraction ensures that almost every word in shell $r$ of one query lies strictly closer to $\mu$ from the other query, allowing us to extract a fresh local-limit bound at each layer.
+
+\step{Conditional contraction for bulk pairs.}
+To measure the separation $d$ between two query centers, delete the one or two active coordinates in the case of edges, leaving $N=n-O(1)$ free coordinates; for vertices, take $N=n$. Fix a small $\delta>0$. We call a pair bulk if $d\ge\delta N$ when $q\ge3$, and if $\delta N\le d\le(1-\delta)N$ when $q=2$.
+
+Condition on the radius $r$ from the first query and on the letters in any active coordinates. The mismatches against the first query then form a uniformly random subset of size $r-b$, with $0\le b\le2$, inside the $N$ free coordinates. Under this conditioning, the radius from the second query has mean $\mu+\rho(r-\mu)+O_q(1)$, where the contraction factor $\rho=1-qd/((q-1)N)$ satisfies $|\rho|\le1-\eta(q,\delta)$. Its conditional variance is $O_q(n)$, combining the hypergeometric variance for the number of mismatches falling on coordinates where the two queries differ with the binomial variance for the letters chosen at those mismatches. By symmetry, the same mean and variance estimates hold with the roles of the two queries reversed.
+
+\step{Descending exposure of disjoint bundles.}
+For each interior shell $r\in I$, define two bundles of words: those at radius $r$ from the first query whose radius from the second query has strictly smaller absolute deviation from $\mu$, and symmetrically those at radius $r$ from the second query whose radius from the first has strictly smaller absolute deviation from $\mu$. Assign opposite signs to the two bundles according to which query attains $r$. Because a word can belong to a bundle only at the strictly larger of its two absolute deviations from $\mu$, all bundles across all shells $r\in I$ are pairwise disjoint.
+
+Condition on the landmark indicators of all words outside these bundles, and expose both bundles completely in descending order of the absolute deviation $|r-\mu|$. At shell $r$, the collision constraint for row $r$ forces a single value for the difference between the two bundle counts. Later bundles cannot affect row $r$, nor can other rows at the same absolute deviation, because every word in a later bundle has strictly smaller deviation at both queries. Moreover, because we expose the entire landmark selections in each bundle rather than only their counts, all contributions from earlier bundles to later rows are completely known when those rows are reached. Sequential conditioning therefore bounds the collision probability by the product of the maximum point probabilities of the signed bundle-count differences.
+
+\step{Bounding the layer atoms.}
+For shells far from the center, namely $|r-\mu|\ge\sqrt n\log n$, conditional Chebyshev's inequality implies that each of the two bundles at shell $r$ has size $(1-O_\delta(1/\log^2 n))q^n\pi_r$. Given two disjoint bundles of sizes $s,t$ of this magnitude, Fourier inversion bounds the maximum point probability of their signed binomial difference by the normalized integral over $[-\pi,\pi]$ of
+\[
+ [1-2p(1-p)(1-\cos\theta)]^{(s+t)/2}.
+\]
+Rescaling the integration variable by $\sqrt{(s+t)p(1-p)}$, applying Taylor expansion near zero, and using the global envelope $1-\cos\theta\ge2\theta^2/\pi^2$ gives the uniform upper bound $(4\pi\lambda_r)^{-1/2}(1+o(1))$.
+
+For intermediate shells satisfying $C_\delta<|r-\mu|<\sqrt n\log n$, we restrict each bundle to a single balanced subcell: round the within-block mismatch allocations to integers while preserving their total, and distribute the mismatch letters as evenly as possible across the alphabet. By the balanced-cell estimate proved earlier, this subcell captures a conditional fraction $n^{-O_q(1)}$ of the shell, and every word in it has both radii within $O_q(1)$ of their conditional means. For edges, we also fix a compatible pattern on the active coordinates that carries at least a polynomial conditional mass. Choosing the constant $C_\delta$ large enough guarantees that the other radius contracts strictly inside this subcell. Conditioning on all words outside the subcell, the maximum binomial atom of the subcell loses at most $O(\log n)$ in the negative logarithm relative to $\frac12\log(4\pi\lambda_r)$. Across all intermediate shells, this loss accumulates to $O(\sqrt n\log^2 n)=o(n^{2/3})$.
+
+Finally, omitting the remaining bounded number of rows closest to $\mu$ costs $O(n^{1/3})$ in the negative logarithm. Multiplying over all exposed layers shows that every bulk collision, including a pair of nonparallel edges, has probability at most $\exp[-J_n+o_\delta(n^{2/3})]$.
+
+\subsection{Boundary separations and binary reflections}
+To complete the sharp first-moment formula, we combine the bulk estimate with exponential upper bounds on nonbulk separations and, in the binary case $q=2$, evaluate the antipodal branch that produces the $B_n/2$ term.
+
+The total number of query pairs is $\exp(2Ln+O(\log n))$, and this many pairs already occur at a single fixed typical separation (taking parallel edges with a fixed active letter-pair for the edge lower bound). Combining this count with the matching lower and upper bounds on bulk collision probabilities gives a bulk contribution of $\exp[B_n n^{2/3}+o(n^{2/3})]$.
+
+Write $h$ for the binary entropy function and set $b_q(\delta)=h(\delta)+\delta\log(q-1)$. For $q\ge3$, the number of nonbulk pairs is at most $\exp[(L+b_q(\delta))n+O(\log n)]$, while the shifted-block forest proved earlier bounds each nonbulk collision probability by $\exp[-\sqrt{1-\delta}\,an+o(n)]$. Choosing $\delta$ sufficiently small makes the combined exponent strictly negative, so nonbulk pairs are negligible.
+
+In the binary case $q=2$, nonantipodal vertex pairs satisfy the earlier uniform rate $-a$, while the number of nonbulk pairs is at most $\exp[(L+h(\delta))n+O(\log n)]$. Parallel nonantipodal edges satisfy the same bound after fixing the active bit. For nonparallel binary edges, delete both active coordinates so that $N=n-2$ free coordinates remain, and treat the three separation regimes by choosing offsets on the two active coordinates:
+when $0<d<N$, set both offsets to zero and apply the nonantipodal forest;
+when $d=0$, set the two offsets to zero and one to obtain a fixed-shift path;
+when $d=N$, take the midpoint $t=(N+1)/2$, set both offsets to zero below $t-1$ so the other radius is $N-r$, and set both offsets to one above $t+1$ so the other radius is $N+2-r$.
+In either half of the $d=N$ case, the other radius lies strictly closer to $t$. Because the offsets use independent active bits and the chosen classes have free radius $r$ or $r-1$, they retain at least a polynomial fraction of each shell in the retained range. This descending forest again achieves rate $-a$, and the polynomial number of active-coordinate choices does not close the exponential gap.
+
+It remains to evaluate binary antipodal pairs, including parallel projected antipodal edges. There are $\exp(Ln+O(\log n))$ such pairs. Because distances to antipodal queries are complementary, the collision event factors across lower-half radii into independent coincidences of equal-size binomials of mean $\lambda_r$; in the edge case, each projected shell has $2\binom{n-1}{r}$ words. For equal bundle sizes, the Fourier integral from the previous subsection is exact at zero and has a nonnegative integrand. Each interior coincidence factor is therefore $(4\pi\lambda_r)^{-1/2}(1+o(1))$. Transition shells contribute $O(\log n)$ to the negative logarithm by concentration and Cauchy--Schwarz, and exterior shells contribute $O(\lambda_r)$ by considering the event of selecting no landmarks. By reflection symmetry, the log collision probability is $-J_n/2+o(n^{2/3})$, with a bounded shift of the center or the omission of a midpoint row having negligible effect. For outer vertices, deleting the endpoint orbit costs only $(1-p)^2$. Multiplying by the pair count yields a branch contribution of $\exp[(B_n/2)n^{2/3}+o(n^{2/3})]$, proving the asserted maximum for $q=2$.
+
+\section{Failure probability in the first-moment window}
+We now convert the sharp first-moment asymptotics at $\beta=1/2$ into matching logarithmic asymptotics for the nonresolution probability, using the second moment method on restricted collision families.
+
+Fix $a=2L$ and $\beta=1/2$, so that $J_n=2Ln-Bn^{2/3}+o(n^{2/3})$. Let $F$ denote the nonresolution event for any one of the three query types, or for the union of all three. We prove that
+\[
+ \lim_{n\to\infty} n^{-2/3}\log\Pr(F)=
+ \begin{cases}\min(0,B),&q\ge3,\\ \min(0,B/2),&q=2.\end{cases}
+\]
+A zero limit on this scale is not a claim of high-probability nonresolution.
+
+\subsection{Two typical pairs}
+To prove the lower rate $\min(0,B)$, we restrict the collision count $Z$ to pairs at a single typical separation and upper-bound $\mathbb E[Z^2]$ by splitting ordered pairs of query pairs into three cross-distance regimes.
+
+Count only query pairs at one fixed typical separation $d_N=(1-1/q)N+O(1)$ (chosen even in the binary case), requiring absent endpoints for outer vertices and restricting to parallel edges of one fixed direction and letter-pair for edges. By the sharp first-moment bounds proved above, the resulting count $Z$ satisfies $\mathbb EZ=\exp[Bn^{2/3}+o(n^{2/3})]$. For edges, distance measurements still run over the full word space, and we condition on the boundedly many active letters whenever applying contraction.
+
+For two such pairs, compare their four query centers by Hamming distance, taken modulo complements when $q=2$. Choose $\delta>0$ small enough that each within-pair distance exceeds $2\delta n$. By the triangle inequality, cross edges (between one pair and the other) of length at most $\delta n$ cannot share an endpoint and therefore form a matching. Call a cross edge micro-close if its distance is at most $\lfloor\sqrt n\rfloor$.
+
+\step{No cross edge within $\delta n$.}
+In this regime every pair among the four queries is well separated, so all pairwise comparisons contract uniformly. For each row of each discrepancy block, form two signed bundles consisting of words for which one query of that pair attains the unique largest absolute radius deviation among all four queries; words with ties stay outside the bundles. Conditional Chebyshev's inequality and a union bound over the three other queries retain a $1-o(1)$ fraction of each oriented shell outside the central $O(\sqrt n\log n)$ rows. On those central rows, use balanced cells rounded simultaneously for all four queries, omitting a bounded number of rows closest to $\mu$. Complete descending exposure works unchanged because no bundled word touches another row at its own layer. The joint collision probability is therefore at most $\exp[-2J_n+o(n^{2/3})]$. Summing over at most $\exp(4Ln+O(\log n))$ pairs of pairs contributes at most $\exp[2Bn^{2/3}+o(n^{2/3})]$.
+
+\step{A cross edge within $\delta n$, at most one micro-close.}
+Choosing the first pair freely, one endpoint of the second pair inside a ball of radius $\delta n$ around an endpoint of the first pair, and the remaining endpoint freely gives at most $\exp[(3L+b_q(\delta))n+O(\log n)]$ configurations; in the binary case, including complementary balls only doubles this bound. Because the short cross edges form a matching and at most one is micro-close, each pair contains an anchor query not incident to any micro-close edge. Its distance from all three other endpoints in the chosen metric exceeds $\lfloor\sqrt n\rfloor$, so each conditional contraction slack is at least $c_q/\sqrt n$. Inside the four-query balanced subcell, all other radii lie within $O_q(1)$ of their conditional means and therefore contract strictly outside the central $O_q(\sqrt n)$ shells. Exposing these rigid anchor columns in both discrepancy blocks in descending order, the omitted central shells cost $O(n^{5/6})=o(n)$ and the polynomial cell losses cost $O(n^{2/3}\log n)=o(n)$. The joint collision probability is thus at most $\exp[-2an+o(n)]$ uniformly. Since $b_q(\delta)<L$ for small $\delta$, the total contribution of this regime is exponentially small.
+
+\step{Two micro-close cross edges.}
+Because the two micro-close cross edges form a matching, each endpoint of the second pair lies in a micro-close ball around a distinct endpoint of the first pair. A micro-close ball, together with its complementary copy in the binary case, has size $\exp[O_q(\sqrt n\log n)]$, so only $\exp[2Ln+o(n^{2/3})]$ configurations occur. Bounding the joint collision event by a single pair's collision at cost $\exp[-J_n+o(n^{2/3})]$ yields a total contribution of at most $\exp[Bn^{2/3}+o(n^{2/3})]$.
+
+In all three upper bounds on $\mathbb E[Z^2]$, we may drop the endpoint-absence constraint for outer vertices. Combining the three regimes with the Cauchy--Schwarz second-moment inequality gives
+\[
+ \Pr(Z>0)\ge (\mathbb E Z)^2/\mathbb E[Z^2]
+ \ge\exp[(\min(0,B)+o(1))n^{2/3}].
+\]
+For $q\ge3$, Markov's inequality applied to the full collision count supplies the matching upper bound.
+
+\subsection{Binary antipodal families}
+In the binary case $q=2$, the antipodal branch dominates whenever $B<0$. We repeat the second-moment analysis on antipodal pairs to obtain the lower rate $\min(0,B/2)$ and complete the proof.
+
+Restrict attention to antipodal vertex pairs, or to parallel projected antipodal edge pairs of one fixed active direction. There are $\exp(Ln+O(\log n))$ such pairs, and by the previous section their expected collision count is $\exp[(B/2)n^{2/3}+o(n^{2/3})]$. For two such pairs, measure the distance between their representatives modulo complements, and divide into the same three regimes.
+
+When the representative distance exceeds $\delta n$, form two folded discrepancy blocks in which each row below the midpoint records the difference of opposing ordinary shell counts. Within each opposing shell, keep those words whose distance to the other pair's representative has strictly smaller absolute deviation from the midpoint. Conditional Chebyshev's inequality retains a $1-o(1)$ fraction of each shell outside the central range, while inside the central range we use rigid balanced cells as before. Descending exposure yields a negative-log cost of $J_n/2+o(n^{2/3})$ per block. Counting pairs of antipodal pairs then bounds the joint contribution by $\exp[Bn^{2/3}+o(n^{2/3})]$.
+
+When the representative distance lies between $\lfloor\sqrt n\rfloor$ and $\delta n$, the folded anchor rows still contract with slack $c/\sqrt n$; omitting $O(\sqrt n)$ central rows gives a joint collision probability of at most $\exp[-an+o(n)]$. Since there are at most $\exp[(L+h(\delta))n+O(\log n)]$ configurations in this regime, an exponential gap remains. At micro-close distance, bounding the joint event by one collision of probability $\exp[-J_n/2+o(n^{2/3})]$ across at most $\exp[Ln+o(n^{2/3})]$ configurations contributes at most $\exp[(B/2)n^{2/3}+o(n^{2/3})]$.
+
+Applying the same second-moment inequality yields the lower rate $\min(0,B/2)$, while the full first-moment bound and the trivial upper bound of one supply the matching upper rate. For outer vertices, the endpoint-absence factor does not affect this scale. For parallel edges, the folded shell center is $(n-1)/2$ and the projected shell sizes are doubled, as already accounted for in their full shell law. Finally, taking maxima and applying a finite union bound transfers the result to the union of all three failure events.

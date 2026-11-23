@@ -1,0 +1,86 @@
+\section{Binary vertex collisions in the narrow window}
+\label{sec:binary-orbit-poisson}
+
+In this section we determine the limiting distribution of vertex collisions in the binary hypercube (\(q=2\)) inside the narrow scaling window. Throughout, evaluate the constants of Section~\ref{sec:classical-poisson} at \(q=2\), with \(v=1/4\), \(s=n^{1/3}\), and \(L=\log 2\), and set
+\[
+ t_2=\frac{1}{R}\left(A+\frac{R^5(1+2v)}{360v^3}
+                      -\frac{2v}{R}J_0\right),
+ \qquad u_2=\frac{1}{2R}.
+\]
+Under independent Bernoulli landmark selection with mean
+\[
+ K_n=\kappa_1\sqrt n\exp\left(As+\frac{t_2}{s}
+                         +\frac{u_2\log n+y}{s^2}\right)
+\]
+for a fixed parameter \(y\), the numbers of ordinary and outer colliding unordered vertex pairs each converge in distribution to twice a Poisson random variable with mean
+\[
+ \Lambda_2(y)=\frac{\sqrt{2\pi v}}{16}e^{-D-Ry}.
+\]
+In particular, the resolution probability converges to \(e^{-\Lambda_2(y)}\). The same limit law holds when the landmark set is a uniform random subset of size \(K_n\) rounded to an integer.
+
+The factor of two in the limit reflects bitwise complement symmetry: complementing a vertex reverses its distance histogram, so nonantipodal colliding pairs occur in complement orbits of size two. Our proof proceeds in four steps. We first compute the collision probability for a single pair of vertices at a typical even distance, then show that odd, antipodal, and atypical distances make negligible contributions, next compute the fixed-order factorial moments of typical even-distance orbits via spanning-forest bounds and Fourier factorization, and finally transfer the result from independent Bernoulli selection to uniform subsets of fixed cardinality.
+
+\step{The even-distance atom.}
+We begin by computing the collision probability \(P_d\) for a pair of vertices at a typical even distance \(d\). Set \(h_r=\log(4\pi\lambda_r)\) and \(S=\sum_r(\tfrac12(h_r)_++G(h_r))\), and call an internal distance typical when \(|d-n/2|\le n^{11/12}\).
+
+When two vertices lie at an even Hamming distance, the distances from any landmark to the two vertices always have the same parity. Consequently, the discrepancy between their distance histograms sums to zero separately over the even-radius shells and over the odd-radius shells. To remove these two linear dependencies, we delete one nearest central radius of each parity, denoted \(c_0,c_1\). The Fourier singleton construction of Section~\ref{sec:classical-birthday} then uses the deleted radius of the prescribed parity, and the errors incurred in splitting the two small-row endpoint phases are bounded by the same two-tilt estimate as in Section~\ref{sec:classical-poisson}.
+
+In shell coordinates, the resulting whitened dense covariance is the compression of \(I-P-F\), where \(P\) projects onto the constant and alternating radial directions, and \(F\) has radial eigenvalues \(f_j(d)\) for \(1\le j<n\), and zero otherwise. Uniformly over the typical distance band, the trace norm satisfies \(\|F\|_1=o(1)\). To see this, use the symmetry of the spectrum to reflect the degrees to \(j\le n/2\), then sum the replacement bound \(|1-2d/n|^j+O(j^2/n)\) for degrees up to \(C\log n\) and the opposite-sign matching bound \(O(\sqrt j\,e^{-j/3})\) for the remaining degrees.
+
+Let \(E\) be the inclusion of the dense undeleted rows, and set \(N=E^*(I-P)E\). Then \((I-P)EN^{-1/2}\) is an isometry, so the normalized determinant is \((1+o(1))\det N\). Since each parity class has total uniform mass \(1/2\), the quantity \(\det N\) equals the product of the omitted shell masses conditional on each parity, which is \((1+o(1))4\pi_{c_0}\pi_{c_1}\), where \(\pi_r\) denotes the uniform shell probability. Combining the small-shell factors with the diagonal dense factors produces the same scalar \(S\) as in Section~\ref{sec:classical-poisson}, with corrections coming only from the two deleted rows and the determinant:
+\[
+ \log P_d=-S+\tfrac12(h_{c_0}+h_{c_1})
+             -\tfrac12\log(4\pi_{c_0}\pi_{c_1})+o(1)
+         =-S+As+\tfrac12\log n+\tfrac12\log(2\pi v)-\log 2+o(1).
+\]
+Because the scalar expansion in Section~\ref{sec:classical-poisson} does not depend on the choice of gauges, evaluating it at the displayed mean \(K_n\) yields \(S=2Ln+As+\tfrac12\log n+D+Ry+o(1)\).
+
+\step{Excluded events.}
+We next show that odd-distance collisions, antipodal collisions, and collisions at nontypical even distances all have negligible effect on the limiting distribution.
+
+An odd-distance collision forces the numbers of selected landmarks in the two global parity classes to be equal. By the maximal binomial atom bound, this equality occurs with probability \(O(K_n^{-1/2})\). This excludes all odd-distance collisions in probability, though not necessarily in expectation.
+
+For an antipodal pair, having identical distance histograms is equivalent to having equal landmark counts in each unordered complementary shell pair \(\{r,n-r\}\) with \(r\ne n-r\). Because distinct shell pairs are disjoint, these conditions are independent. Within each shell pair, the logarithm of the binomial difference characteristic function differs uniformly from the logarithm of the symmetric Poisson difference characteristic function by \(O(p^2\binom nr)\), and both characteristic functions are positive for all sufficiently large \(n\). Summing this discrepancy over all shells gives a total error of \(o(1)\). Since \(\lambda_r=\lambda_{n-r}\), the log collision probability of an antipodal pair is \(-S/2+\mathbf 1_{2\mid n}h_{n/2}/4+o(1)\), where the central term is included only when \(n\) is even. Multiplying this probability by the \(2^{n-1}\) antipodal pairs gives a quantity tending to zero.
+
+For all other nonzero, nonantipodal distances outside the typical band, we use the one-anchor balanced-column construction established below. It bounds each collision probability uniformly by \(\exp(-2Ln+O(n^{2/3}\log n))\). Since restricting to the excluded distance band incurs an entropy loss of \(\Omega(n^{5/6})\), the expected number of collisions in this band is \(o(1)\).
+
+\step{Fixed factorial moments on complement orbits.}
+We now show that the fixed-order factorial moments of the colliding complement orbits converge to those of a Poisson random variable with mean \(\Lambda_2(y)\). Because complementing a vertex reverses its distance histogram, a nonantipodal unordered pair and its simultaneous complement define the exact same collision event. Define the retained count to be the number of colliding complement orbits of typical even-distance pairs.
+
+Fix a factorial order \(k\), and consider an ordered tuple of \(k\) candidate pairs with \(2k\) labeled endpoints. Cluster the \(2k\) endpoints by taking the transitive closure of the quotient-distance relation \(\min(d,n-d)\le\delta n\). In each cluster, select a representative vertex and orient all other words in the cluster (by complementing them when needed) so that each lies within distance \(2k\delta n\) of the representative; the raw orientation choices cost only a constant factor. Contracting each cluster to a single vertex produces a loopless multigraph of candidate edges with \(b\) clusters and \(c\) nontrivial connected components. The number of configurations with these parameters is bounded by \(\exp(bLn+2k b_2(2k\delta)n+O_k(\log n))\).
+
+\step{Spanning-forest column bounds.}
+To bound the joint collision probability of a clustered configuration, choose a rooted spanning forest of the contracted multigraph, keeping one edge per parent-child link and anchoring that edge at its child endpoint. For each absolute-deviation layer \(\{r,n-r\}\) outside a fixed central strip, we build an exact column at each of the two radii using the shell tilt and rounding procedure of Section~\ref{sec:classical-poisson}.
+
+First orient every comparator vertex inside the anchor's cluster to lie close to the anchor. The comparison radii then remain weakly inward on the same side of the central strip, and by the same cell rounding we can make the radius strictly inward against one nominated distinct aligned comparator. Restoring the total count in an agreement cell does not disturb these inequalities. Undoing the orientations may reflect some radii across the center, but it leaves all absolute deviations unchanged. Meanwhile, comparators in other clusters contract these deviations by a fixed factor, and removing the fixed central strip absorbs rounding errors so that their radii are strictly inward as well.
+
+Each exact column class retains at least a polynomial fraction of its anchor shell. At the leading absolute-deviation layer, arranging the columns in parent-before-child order makes the forest matrix block triangular: each diagonal block is a signed permutation of the two radii in the layer, and the only possible extra entries occur in child-edge blocks. Descending layer by layer proves linear independence of the columns. Conditioning on the landmarks outside these disjoint classes bounds the collision probability by the product of their maximal binomial atoms, contributing a cost of \(2Ln+O_k(n^{2/3}\log n)\) for each complete two-radius family. This same construction also proves the one-anchor bound used earlier for nontypical distances: any quotient-separated comparator contracts, while a close nonidentical aligned comparator is made strictly inward at both radii. Whenever \(b>2c\), the \(b-c\) complete families beat the configuration entropy bound once \(\delta\) is chosen sufficiently small.
+
+\step{Parallel edges and folded constraints.}
+When \(b=2c\), every nontrivial component has two clusters, and any component containing parallel edges supplies extra columns. If two parallel edges in a component have distinct quotient endpoints on at least one side, we anchor both edges on that side and, in each column construction, nominate the other aligned anchor to be strictly inward. Both leading two-radius blocks are then diagonal up to signed permutations, providing two complete families.
+
+If instead both endpoint quotient distances are zero, then distinct complement orbits must have opposite relative complement signs. Choosing representatives \(X,Y\) for the two clusters, the two collision conditions imply \(H_X=H_Y\) and \(H_Y=JH_Y\), where \(J\) reverses the radius order. In each layer with \(r>n/2\), we retain the two rows of \(H_X-H_Y\) together with the single row \(H_Y(r)-H_Y(n-r)\). Because the opposite cluster is strictly inward, the two \(X\)-anchor columns and the \(Y\)-anchor column at radius \(r\) form a triangular leading matrix. Having three columns per layer rather than two adds half the cost of a complete family. In both cases, retaining one complete family in each of the remaining components yields a total probability bound that defeats the configuration entropy.
+
+\step{Typical tuples and factorial moments.}
+The only configurations not yet eliminated consist of single-edge components with distinct quotient endpoints. The spanning-forest bound above also beats the \(\exp(-\Omega_k(n^{5/6}))\) fraction of such tuples in which some coordinate-type count differs from \(n/2^{2k}\) by more than \(n^{11/12}\).
+
+For the remaining typical tuples, the fixed-order Fourier factorization from the preceding sections extends with two gauges per block. Specifically, translate one anchor to zero and impose three conditions: its own radius \(r\), the deleted radius \(c\) of matching parity for its partner, and zero discrepancy in every other pair. Writing \(y\) for the translated partner and \((u_j,v_j)\) for the other translated pairs, the coefficient columns for the landmark bits are \((1,y_i,(v_{ji}-u_{ji})_j)\), and the corresponding right-hand sides are \(r,(r+|y|-c)/2,((|v_j|-|u_j|)/2)_j\), all of which are integers. Coordinate types with all zero bits, or with a single one at the partner or at the positive endpoint of another pair, yield a unimodular minor supported on linear-size cells. This gives the same singleton adjustment and intensity estimates as in the single-pair analysis.
+
+In the cross-block radial Gram bounds, degrees 0 and \(n\) vanish identically in every even-distance block and are therefore omitted. The off-diagonal whitened blocks have Hilbert--Schmidt norm \(o(1)\), and because the off-diagonal matrix has zero trace, the ratio of the joint determinant to the product of the individual block determinants is \(1+o(1)\). All small-shell and dense-shell splitting errors are summed over only a bounded number of block pairs, which yields uniform relative factorization of the collision atoms.
+
+After all typicality restrictions, the fraction of ordered tuples with all internal parities even is \(2^{-k}+o(1)\). Each ordered list of \(k\) complement orbits is represented \(4^k\) times by labeled tuples, accounting for swapping the endpoints and taking their simultaneous complement in each pair. The fixed factorial moments of the retained orbit count therefore converge to the corresponding powers of the stated Poisson mean \(\Lambda_2(y)\). Since the retained ordinary vertex collision count is exactly twice the orbit count, the exclusions established earlier transfer this limit law to the full ordinary count. For outer vertices, the radius-zero independence identity shows that the expected number of retained physical pairs lost because an endpoint is selected is \(o(1)\), as their ordinary mean is bounded. Since the excluded outer collision events are subevents of the excluded ordinary events, the limit law transfers to outer vertices as well.
+
+\step{Fixed cardinality.}
+Finally, we transfer the limit law from independent Bernoulli selection to a uniform landmark subset of fixed size \(K_n\).
+
+For typical even-distance tuples, omitting the anchor-radius constraint from the unimodular construction above and imposing equal distances on every pair yields a neutral class of polynomial mass. The relative iid and no-repeat transfer of Section~\ref{sec:fixed-cardinality} therefore applies unchanged to both single and joint typical atoms. In the remaining factorial-moment bounds and in the excluded nonantipodal even-distance bounds, conditioning Bernoulli selection on its total size incurs a factor of only \(O(\sqrt{K_n})\), which is absorbed by their entropy margins. Odd-distance collisions are impossible when the sample size is odd; when it is even, global parity balance occurs with probability
+\[
+ \frac{\binom{2^{n-1}}{K_n/2}^2}{\binom{2^n}{K_n}}
+ =(1+o(1))2^{-K_n}\binom{K_n}{K_n/2}
+ =O(K_n^{-1/2}),
+\]
+where the relative approximation follows by expanding the falling factorials using \(K_n^2/2^n=o(1)\).
+
+For antipodal pairs with even \(n\), we apply the relative transfer directly to a folded antipodal block indexed by coordinates \(r<n/2\). A word in shell \(r\) or shell \(n-r\) supplies the two signed unit columns of that coordinate, each with probability \(\pi_r\), while the central shell forms a neutral class of polynomial mass. The independent Poisson proxy is the exact positive product of the symmetric shell characteristic functions. The same dense-box estimate, centered quadratic bound, and shifted-atom estimate therefore give the folded atom with relative error \(o(1)\), preserving its vanishing total mean. For odd \(n\), parity already eliminates all antipodal collisions.
+
+To complete the transfer for outer vertices, observe that for any retained pair, the probability of both colliding and having a specified endpoint selected is at most \((1+o(1))K_n2^{-n}\) times its Poisson atom. Indeed, we sum over the \(K_n\) iid positions that could take that endpoint, bound the required shifted atom of the remaining \(K_n-1\) positions by the same absolute Fourier integral estimate, and divide by the probability of having no repetitions, which tends to one. Summing over both endpoints and all retained pairs proves the outer transfer.

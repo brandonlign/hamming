@@ -1,0 +1,44 @@
+\section{Transfer to exactly \(K\) landmarks}
+\label{sec:fixed-cardinality}
+
+In this section we show that the classical sparse probability thresholds also hold when the landmarks form a uniformly sampled \(K\)-element subset, with \(K\) rounded to an integer at the prescribed scales. For ordinary and outer vertices over alphabets of size \(q\ge3\), the Poisson law of Section~\ref{sec:classical-poisson} and its smaller probability windows likewise hold in this model. This transfer does not rely on monotonicity of resolution. The all-face results and the classical exponential failure rates are not transferred in this section.
+
+The argument proceeds in two steps. On typical configurations, we represent the uniform subset by conditioning \(K\) independent draws with replacement on having no repetitions, and compare the resulting Fourier integral directly to the Poisson model with relative error \(o(1)\). On atypical configurations, we condition independent Bernoulli landmarks on having total count \(K\), transferring all earlier upper bounds at a multiplicative cost of \(O(\sqrt K)\).
+
+\step{Relative control for typical configurations.}
+We first draw \(K\) independent words with replacement and compare the zero-discrepancy probability to the Poisson model. Let \(D\) be the stack of one-word signed discrepancy columns in gauged coordinates, and write \(\phi(\theta)=\mathbb E e^{i\theta\cdot D}\) for its characteristic function. The zero-discrepancy atom is then the integral of \(\phi^K\) over the torus with normalized Lebesgue measure.
+
+To control the integral outside the dense frequency box, we verify the neutral and singleton lower bounds for a single draw. For the typical configurations used in Sections~\ref{sec:classical-birthday} and \ref{sec:classical-poisson}, the neutral word class \(D=0\) has probability at least \(n^{-O_k(1)}\). To see this, round the allocations of uniformly distributed landmark letters across the finitely many typical endpoint tuple cells, and correct the bounded residual in each pair's signed distance difference. For \(q\ge3\), a unit correction in a single block is given by choosing a single exceptional center letter and changing the landmark letter to a third letter, just as in the singleton construction. For \(q=2\), the internal candidate separations are even, so every residual is even, and a lone-bit tuple allows a change of two in that block alone. When parallel edges are present, we restrict to the common zero-offset fiber, which has positive probability. Because all correction cells have linear size, the multinomial bounds imply that the rounded allocations carry inverse-polynomial mass. By the same construction, the singleton class of each retained central row still has probability at least \(\lambda_r K^{-1}\exp[-O_k(n^{1/6}+\log n)]\).
+
+\step{Fourier comparison with the Poisson model.}
+Let \(D'\) be an independent copy of \(D\). The symmetrization identity
+\[
+ 1-|\phi|^2=\mathbb E[1-\cos(\theta\cdot(D-D'))]
+\]
+together with the neutral and singleton classes gives the same superexponential off-box bound as in the Poisson model, with only an additional polynomial loss in the witness mass inside the exponent. In particular, the off-box integral is negligible relative to the corresponding Poisson zero atom, and this remains true with \(K-2\) draws in place of \(K\).
+
+On the dense frequency box, we have \(\mathbb E(\theta\cdot D)=0\), because the two members of each pair have equal marginal shell laws. Applying the bound \(|e^{ix}-1-ix|\le x^2/2\) shows that
+\(K|\phi-1|\le \tfrac12K\mathbb E(\theta\cdot D)^2
+=\exp(o(n^{1/3}))\).
+Indeed, each landmark word has at most \(2k\) nonzero terms: the dense terms cost at most \(O_k(nH^2)\), the small terms cost at most \(O_k(n e^{n^{1/4}})\), and the previous tail cutoff has negligible total intensity, where \(H=e^{n^{1/5}}\) as before. Since this implies \(K|\phi-1|^2=o(1)\), we obtain
+\[
+ \phi^K
+  =\exp(K(\phi-1))(1+o(1))
+\]
+uniformly on the dense frequency box. The same estimate holds for \(K-2\) powers relative to the original exponential. Because the Poisson exponent has the positive proxy established previously, integrating \(|\phi|^{K-2}\) in absolute value also gives \(1+o(1)\) times the Poisson zero atom. In particular, every shifted atom of the \(K-2\) sum is bounded by that same quantity.
+
+\step{Excluding repeated draws.}
+We now condition the independent draws on having no repetitions to pass to a uniformly chosen subset. If two specified positions draw the same word, the other \(K-2\) draws remain independent and identically distributed, and for the total discrepancy to vanish, their discrepancy sum must equal the negative of that shared word's column counted twice, which is a shifted atom of the \(K-2\) sum. Summing over all pairs of positions and applying the shifted-atom bound, the joint probability of a repetition and zero discrepancy is at most
+\[
+ \binom K2 q^{-n}(1+o(1))\,P_{\rm Pois},
+\]
+where \(P_{\rm Pois}\) denotes the zero atom in the independent Poisson occupancy model of total mean \(K\). Since \(K^2q^{-n}=o(1)\), conditioning on no repetitions changes the zero atom by only \(o(P_{\rm Pois})\). This conditioning produces a uniformly chosen \(K\)-subset. Because the Bernoulli atom at parameter \(K/q^n\) already agrees relatively with the Poisson atom on typical configurations, we have transferred every typical single and joint atom with a uniform relative error \(o(1)\).
+
+\step{Atypicals and conclusion.}
+We now transfer the atypical bounds and deduce the threshold and Poisson limits. Conditioning independent Bernoulli landmarks with inclusion probability \(K/q^n\) on having total count \(K\) produces the uniform subset directly. By Stirling's formula, this conditioning event has probability \(\Theta(K^{-1/2})\), so every prior atypical upper bound transfers after multiplication by \(O(\sqrt K)\). This factor is negligible both in the exponential comparison for nonzero close matches and against the \(\exp(-\Omega(n^{5/6}))\) frequency loss for atypical well-separated tuples.
+
+In the classical second moment method, exact repetitions and the binary complement variants are bounded directly by the actual single atom for the uniform subset rather than by the conditioning penalty. Because that single atom was transferred relatively, the remainder is still \(O(1/(MP))\) as before. This proves all high-probability failure assertions at the endpoint and below. High-probability success away from the narrow vertex window follows from the preceding first-moment bounds together with the \(O(\sqrt K)\) conditioning penalty, since the savings there are on the \(n\) or \(n^{2/3}\) scales, or larger. In the narrower \(q\ge3\) vertex window, we use the relative typical atoms instead; the discarded internal distances still satisfy the same negligible total bound after conditioning.
+
+For outer vertices in the uniform subset model, an ordinary collision involving a landmark forces both queried vertices to be landmarks because of the radius-zero entry. On typical configurations, the corresponding event in the independent-draws representation requires two draws to hit those two vertices and the remaining \(K-2\) draws to achieve a shifted discrepancy, which costs at most \(K(K-1)q^{-2n}\) times the upper bound for a shifted \(K-2\) atom. Restricting to no repetitions therefore changes the typical collision atom by a relative \(o(1)\). For atypical configurations, the ordinary upper bounds also dominate the outer events. In the Poisson window, the same relative single estimate and the negligible bound on discarded pairs show that the ordinary and outer collision counts for a uniform subset agree with probability tending to one.
+
+Finally, in the fixed-order factorial moment proof, identical edges are excluded from each factorial moment, leaving only the two kinds of nonzero atypical configurations handled above. Because the typical terms transfer relatively and the atypical terms remain negligible, the factorial moments converge to the same limits as before, yielding the same Poisson limits for the uniform subset model.

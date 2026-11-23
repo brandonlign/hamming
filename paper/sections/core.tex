@@ -1,0 +1,90 @@
+\section{Entropy lower bound}\label{app:entropy}
+In this section we prove a lower bound on the number of landmarks needed for vertex, outer-vertex, or edge resolution. The strategy is to compare the Shannon entropy of a uniformly random query with an upper bound on the entropy of its distance histogram obtained by applying the geometric maximum-entropy bound to each shell count separately.
+
+Write $p_0=(q-1)/q$ for the mismatch probability between two independent uniform letters, and set $\sigma^2=p_0(1-p_0)$. Choose a query $X$ uniformly among all vertices or among all edges, and let $Y_r$ count the landmarks at distance $r$ from $X$. For any fixed set of $k$ landmarks, transitivity of the Hamming graph and linearity of expectation give $\mathbb EY_r=k\pi_r$, where $\pi_r$ is the distance distribution of a single fixed landmark from $X$. For vertex queries, $\pi_r$ is simply the law of $\mathrm{Bin}(n,p_0)$. For edge queries, conditional on the active coordinate of the edge, the inactive letters are uniform and independent of the uniform unordered pair of active letters. Consequently, the distance from a fixed landmark to a uniform edge is the independent sum of $\mathrm{Bin}(n-1,p_0)$ and $\mathrm{Bernoulli}(1-2/q)$.
+
+Any nonnegative integer-valued random variable with mean $u$ has Shannon entropy at most $h(u)=(u+1)\log(u+1)-u\log u$ (with $h(0)=0$), because its relative entropy with respect to the geometric distribution of mean $u$ is nonnegative. Applying subadditivity of entropy across shells and bounding $h(u)$ from above gives
+\[
+ H(Y)\le\sum_r h(k\pi_r),\qquad h(u)\le (\log u)_++2\quad (u>0).
+\]
+For small means $0<u\le1$, we also use the sharper bound $h(u)\le u(2+\log(1/u))$. Note that subadditivity requires no independence among the coordinates of the distance histogram.
+
+To bound the landmark count from below, it suffices to pass to subsequences along which $n^{-1/3}\log k\to\lambda<\infty$, which in particular implies $k/q^n\to0$. When the landmark set resolves all vertices, the histogram determines $X$ uniquely, so $H(Y)=n\log q$; similarly, edge resolution gives $H(Y)=\log(n\binom q2 q^{n-1})$. For outer vertex resolution, conditioning on whether $X$ belongs to the landmark set yields $H(Y)\ge(1-k/q^n)\log(q^n-k)$. In all three cases we have $H(Y)\ge n\log q-o(n)$.
+
+We split the sum over shells into a moderate-deviation window around the mean and its tail. For any fixed $B$, Stirling's formula and the Taylor expansion of the binomial relative entropy give, uniformly over $|r-np_0|\le Bn^{2/3}$,
+\[
+ \log\pi_r=-\frac{(r-np_0)^2}{2\sigma^2n}+O_{q,B}(\log n).
+\]
+On this window the cubic Taylor remainder in the exponent is bounded. Replacing $n$ by $n-1$ and applying bounded shifts preserve this asymptotic estimate, as does taking a mixture of the resulting atoms with fixed positive weights (for binary edges, only one weight is nonzero). Outside the window, choose $B$ large enough that Hoeffding's inequality yields $\pi_r\le\exp[-(\lambda+1)n^{1/3}]$ for all sufficiently large $n$. Then $k\pi_r\le\exp[-n^{1/3}/2]$ on the tail, so monotonicity of $h$ together with the small-mean bound shows that all tail shells combined contribute $o(n)$ to the entropy.
+
+Inside the window, the additive constant $2$ in the upper bound for $h(u)$ contributes $O(n^{2/3})$ across all shells in the window. Rescaling the shell index via $x=(r-np_0)/n^{2/3}$ converts the remaining sum into a Riemann sum, yielding
+\[
+ \log q\le\limsup H(Y)/n\le
+ \int_{\mathbb R}\!\left(\lambda-\frac{x^2}{2\sigma^2}\right)_+dx
+ =\tfrac43\sqrt{2\sigma^2}\,\lambda^{3/2}.
+\]
+Rearranging this inequality gives $\lambda\ge C_q/4^{2/3}$, as claimed.
+
+\section{Collision witnesses}
+We now introduce a general method for bounding the probability that two distinct queries produce the same distance histogram in the independent Bernoulli landmark model with inclusion probability $p=q^{-n}\exp(A n^{1/3})$. The idea is to find disjoint classes of candidate landmarks whose distance pairs form a forest; conditioning on all selections outside these classes then leaves at most one valid tuple of landmark counts inside them, allowing us to multiply single-binomial maximum-atom bounds.
+
+Observe that a class of words at distances $r,s$ from the first and second queries, respectively, contributes its number of selected landmarks multiplied by $e_r-e_s$ to the difference between the two histograms. Suppose we select disjoint classes whose unordered distance pairs form a forest with no repeated edges. By repeatedly deleting leaves, the corresponding oriented incidence vectors are linearly independent. Conditional on all landmark selections outside these classes, a histogram collision therefore admits at most one tuple of counts for the remaining independent binomial variables. This conclusion holds even when each chosen class is only a proper subset of a joint-distance cell.
+
+To bound the probability of hitting that unique tuple, we use the following maximum-atom estimate: for a class of size $L$, the maximum point probability of its selected landmark count is at most
+\[
+ \min\{1,C[Lp(1-p)]^{-1/2}\}.
+\]
+Indeed, Fourier inversion bounds the maximum atom by the normalized integral of $|1-p+pe^{it}|^L$ over $[-\pi,\pi]$. Writing the squared modulus as $1-4p(1-p)\sin^2(t/2)$ and applying the inequality $\sin(|t|/2)\ge |t|/\pi$ on $[-\pi,\pi]$ gives the desired bound.
+
+\subsection{Paths and matchings}
+We next construct explicit forest families of collision witnesses for two centers on a coordinate block of length $N\in\{n,n-1,n-2\}$, allowing additive distance offsets $t_1,t_2\in\{0,1,2\}$. Assume that either the two centers differ or the two offsets differ. Depending on whether the centers differ in at most half or more than half of the coordinates, we obtain either a collection of disjoint paths or a matching.
+
+\step{Coordinate decomposition and binomial estimates.}
+Let $d$ be the number of coordinates where the two centers differ, and let $m=N-d$ be the number of coordinates where they agree. On the agreeing coordinates, we take words of Hamming weight $i$ relative to the common center; there are $\binom mi(q-1)^i$ such words. On the differing coordinates, let $a,b$ count the positions matching the first and second centers, respectively, and let $c=d-a-b$ count the positions matching neither center. There are $d!(q-2)^c/(a!b!c!)$ such choices on the differing block, and each resulting word has unshifted distance pair $(i+b+c,i+a+c)$. When $q=2$, no letter differs from both centers, so we set $c=0$ and use the convention $0^0=1$.
+
+To evaluate the sizes of these classes, we use two basic facts about binomial probabilities on $M=\Theta(n)$ trials with a fixed success parameter. First, any atom within $O(n^{2/3})$ of the mean has probability $\exp[-O(n^{1/3})]$: Stirling's formula expresses its logarithm as $-M D(j/M\Vert\pi)+O(\log n)$, and the relative entropy satisfies $D(\pi+v\Vert\pi)=O(v^2)$ near $0<v+\pi<1$ as $v\to0$. Second, fixing a binomial variable at a mode loses at most a factor of $M+1$, and shifting a bounded number of steps away from a mode (while remaining in the support) loses only an additional constant factor, as seen from ratios of adjacent binomial probabilities.
+
+\step{Path construction for small distance.}
+Suppose $m\ge N/2$ and $d\ge1$. We fix the differing-block counts and vary the agreeing-block weight $i$. Specifically, fix $u=a+b$ at a mode of $\mathrm{Bin}(d,2/q)$, taking $u=d$ when $q=2$. If that mode happens to be zero (which occurs only for bounded $d$), replace it by $1$. Next choose $a\ne b$ summing to $u$ as close to equal as possible, and order them so that $b-a+t_1-t_2\ne0$. The number of differing-block choices equals $q^d$ times the point probabilities at $u$ and $a$ of $\mathrm{Bin}(d,2/q)$ and $\mathrm{Bin}(u,1/2)$, respectively, and is therefore at least $q^d/n^{O_q(1)}$. Now let $i$ range over consecutive integers in the moderate-deviation window around $mp_0$. Every resulting edge joins two levels separated by the same nonzero shift, so the edges decompose into vertex-disjoint paths within residue classes and hence form a forest. When $d=0$, the offsets must differ, and the same path construction goes through directly without any choice on differing coordinates.
+
+\step{Matching construction for large distance.}
+Suppose instead that $d>N/2$. Here we fix $i$ at a mode of the agreeing-block weight (taking zero if $m=0$) and fix $u$ at the mode of $\mathrm{Bin}(d,2/q)$ as above, which is now of order $n$. Let $a$ vary over consecutive integers below $\lfloor u/2\rfloor-2$ that lie within $O(n^{2/3})$ of $u/2$, and set $b=u-a$. The two shifted distance endpoints then lie on opposite sides of a common fixed midpoint. As $a$ increases, the lower endpoint increases and the upper endpoint decreases, so all endpoints are distinct and the edges form a matching. In this construction the varying binomial atom comes from $\mathrm{Bin}(u,1/2)$, while fixing $i$ and $u$ incurs only polynomial factors.
+
+\subsection{Reduction of edges to shifted distances}
+To apply the path and matching constructions to pairs of edge queries, we fix the landmark letters on the active coordinates of both edges. Doing so converts each edge distance into a vertex distance on the remaining coordinates plus an additive offset: fixing a landmark letter on an edge's active coordinate adds offset zero if that letter lies in the edge's active pair, and offset one otherwise.
+
+For two parallel edges, they share the same active coordinate. If their words on the inactive coordinates differ, any fixed letter on the active coordinate leaves distinct centers on the remaining block. If their inactive words coincide, the two edges must have distinct active pairs, so we choose a letter in the symmetric difference of those pairs to ensure that the two offsets differ.
+
+For two nonparallel edges, we fix the landmark letters on both active coordinates, leaving a block of length $N=n-2$. If the two restricted centers differ on these $N$ coordinates, any choice of the two active letters suffices. Otherwise, the restricted centers agree, and we examine the first active coordinate, where the first edge has active pair $P$ and the second edge has a fixed letter $\beta$. The contribution of a landmark letter $\ell$ at this coordinate to the difference between the two distances is $\mathbf{1}_{\ell\notin P}-\mathbf{1}_{\ell\ne\beta}$. If $\beta\in P$, comparing $\ell=\beta$ with the other letter in $P$ yields different values; if $\beta\notin P$, comparing $\ell=\beta$ with either letter in $P$ yields different values. Thus this contribution is nonconstant in every case. Fixing the other active coordinate arbitrarily, we can choose $\ell$ so that the total offset difference is nonzero. In all cases the resulting offsets are at most two, and fixing at most two coordinates reduces shell sizes by at most a factor of $q^2$.
+
+\section{Sparse construction and upper bound}\label{app:sparse-upper}
+We now combine the forest witnesses with the maximum-atom bound to upper-bound the expected number of vertex and edge collisions, proving the upper bound in Theorem~1.
+
+\subsection{The shell integral}
+First we translate a forest of witness classes covering almost all shells in a moderate-deviation window into an exponential bound on the collision probability. Suppose that every first-query level $r$ in a fixed rescaled window, with at most $o(n^{2/3})$ exceptions, contributes a forest class of size $L_r$ that is at least its marginal shell size divided by a polynomial in $n$. When $N=n-O(1)$ and $x=(r-Np_0)/n^{2/3}$, bounded additive offsets do not affect the uniform lower bound
+\[
+ \log(pL_r)\ge [A-x^2/(2\sigma^2)]n^{1/3}-O(\log n).
+\]
+By the maximum-atom estimate, the logarithm of the maximum atom for class $r$ is at most $-\frac12(\log(pL_r))_++O(1)$. Multiplying these bounds across the forest and taking the rescaled window wider than the support of the positive part gives a log collision probability of at most $-a_q(A)n+o(n)$, where $a_q(A)=\frac23\sqrt{2\sigma^2}A^{3/2}$.
+
+Two variations of this integral estimate will be needed for the path and matching constructions. If the varying shell lies on a subblock of length $m=\Theta(n)$ while the fixed block incurs only polynomial factors, the quadratic term in the integrand becomes $x^2/(2\sigma^2 m/n)$, which scales the exponential rate to $\sqrt{m/n}\,a_q(A)$. If we only sum over a one-sided window terminating at the mean, the rate is halved. Both estimates hold uniformly whenever $m/n$ is bounded away from zero.
+
+\subsection{A radially descending forest}
+When the Hamming distance $d$ between the two centers is bounded away from $0$ (and, for $q=2$, also bounded away from $N$), we obtain the full shell-integral rate $a_q(A)$ by building a forest in which every edge moves strictly closer to the mean shell radius.
+
+Condition on the unshifted distance $r$ from the first center. The $r$ mismatches occupy a uniformly random $r$-subset of the $N$ coordinates, and their letters are independent and uniform among the $q-1$ alternatives to the first center. First fix a mode $j$ of the number of these mismatches that fall on the $d$ differing coordinates, and then fix a mode $b$ of the number of those $j$ mismatches that match the second center. The distribution of $j$ is hypergeometric, and conditional on $j$, the distribution of $b$ is $\mathrm{Bin}(j,1/(q-1))$. Each modal probability is therefore at least $1/(N+1)$. Moreover, the hypergeometric mode $\lfloor(d+1)(r+1)/(N+2)\rfloor$ differs from $dr/N$ by $O(1)$, and $b=j/(q-1)+O(1)$, which also covers the deterministic binary case. Since the unshifted distance to the second center is $s=r+d-j-b$, setting $z=Np_0$ yields
+\[
+ s-z=\left(1-\frac{qd}{(q-1)N}\right)(r-z)+O(1).
+\]
+Adding bounded offsets changes neither the coefficient nor the $O(1)$ error.
+
+Whenever the contraction coefficient stays inside a compact subinterval of $(-1,1)$, we pick one such modal class for every first-query level $r$ outside a bounded central window around $z$, and direct its edge from the endpoint of larger radius about $z$ to the endpoint of smaller radius. Because each level contributes at most one outgoing edge, no edge is repeated and every vertex has outdegree at most one. Any undirected cycle would have to contain a vertex of maximum radius about $z$, from which two edges would be directed outward to strictly smaller radii, contradicting outdegree at most one. Thus the chosen classes form a forest and achieve the full shell integral. For any fixed small $\delta>0$, this argument covers $d\ge\delta N$ when $q\ge3$, and $\delta N\le d\le(1-\delta)N$ when $q=2$.
+
+\subsection{Endpoint ranges}
+It remains to handle pairs whose centers are nearly identical or, in the binary case, nearly antipodal, and then sum the resulting collision probabilities over all pairs.
+
+When $d<\delta N$, we apply the fixed-shift path construction on the $m=N-d$ agreeing coordinates across the entire moderate-deviation window. By the subblock shell-integral bound, this achieves an exponential rate of at least $\sqrt{1-\delta}\,a_q(A)+o(1)$. Given $A>C_q$, we choose $\delta$ small enough that this rate exceeds $2\log q$ in the limit, which beats even the crude total pair count $O_q(n^2q^{2n})$.
+
+When $q=2$ and $d>(1-\delta)N$, we apply the differing-block matching with $u=d$ over one half of the moderate-deviation window, obtaining a rate of at least $\frac12\sqrt{1-\delta}\,a_2(A)+o(1)$. To count such pairs, note that once the first binary word is chosen, the second must lie in the Hamming ball of radius $\delta N$ around its complement. For edge queries, specifying the active directions and fixed letters contributes only polynomial factors. Hence the number of pairs in this regime is at most $\exp[(\log2+h_2(\delta)+o(1))n]$, where $h_2(t)=-t\log t-(1-t)\log(1-t)$. Because $a_2(A)/2>\log2$, shrinking $\delta$ if necessary ensures that the matching rate dominates this pair count as well.
+
+Summing the collision probabilities over all vertex pairs and all edge pairs shows that the combined expected number of vertex and edge collisions tends to zero. Furthermore, the total number of landmarks is a binomial random variable whose variance is at most its diverging mean; with probability tending to one, it is therefore nonzero and at most twice its mean. Since full vertex resolution implies outer resolution, letting $A\downarrow C_q$ completes the proof of the upper bound in Theorem~1.

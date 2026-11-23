@@ -1,0 +1,109 @@
+\section{The binary-face threshold on the polynomial scale}
+Let \(\rho_*\) be the maximizing fraction in Theorem~\ref{thm:box}, and define the associated variance parameter, scaled band half-width, and threshold constant by
+\[
+ v_* = \rho_*/4,\qquad R_* = \sqrt{2v_* C},\qquad
+ \kappa_* = \frac{\sqrt{v_*}}{2\sqrt{2\pi}}=0.0602978769\ldots.
+\]
+The next theorem pins down the polynomial-scale transition between the failure and recovery regimes of Theorems~\ref{thm:face-wHP} and~\ref{thm:noisy-face}.
+
+\begin{theorem}\label{thm:face-window}
+Suppose the noiseless landmark mean is \(K=\kappa n^\beta e^{Cn^{1/3}}\). Then the probability of resolving every face tends to zero for \(\beta<1/2\) and to one for \(\beta>1/2\). At the critical exponent \(\beta=1/2\), this probability tends to zero for \(\kappa<\kappa_*\) and to one for \(\kappa>\kappa_*\).
+
+For fixed \(B>0\) and error budget \(E=\lfloor e^{Bn^{1/3}}\rfloor\), suppose \(K=\kappa n^\beta e^{(C+2B)n^{1/3}}\). Then the probability of recovering every face under the error budget tends to zero for \(\beta<-5/6\) and to one for \(\beta>-5/6\). At the critical exponent \(\beta=-5/6\), this probability tends to zero for \(\kappa<\kappa_{\rm noise}\) and to one for \(\kappa>\kappa_{\rm noise}\), where
+\[
+ \kappa_{\rm noise}=\kappa_*\left(\frac{4e}{R_*}\right)^2
+ =11.333347057\ldots .
+\]
+Theorems~\ref{thm:noiseless-exact} and~\ref{thm:noisy-exact} establish failure at the respective exact multipliers.
+\end{theorem}
+
+To prove Theorem~\ref{thm:face-window}, we track the polynomial prefactors and leading constants in both the pivot union bounds and the second-moment lower bounds. For the upper bounds we refine the pivot groups to use both orientations of each pair simultaneously, while for the noisy lower bound we introduce a hybrid weight that combines exact dense-row counts with a Gaussian tilt on the remaining rows.
+
+\begin{proof}
+Write \(s=n^{1/3}\) for the exponential scale and \(W=n^{2/3}\) for the bandwidth scale. For any codimension \(r=\rho n\ge\varepsilon n\), set \(v=\rho/4\) and \(R=\sqrt{2vC}\). Within the band \(|j-r/2|\le RW\), the shell-mean expansion takes the form
+\[
+\begin{split}
+ \log\lambda_j={}&
+ \left(C+2B-\frac{((j-r/2)/W)^2}{2v}\right)s
+   + (\beta-\tfrac12)\log n
+   +\log\kappa -\tfrac12\log(2\pi v)+o(1).
+\end{split}
+\]
+We set \(B=0\) in the noiseless case. In this expansion, the cubic correction vanishes by the symmetry of the binomial distribution around \(r/2\), and the quartic remainder is \(o(1)\) uniformly for fixed \(\varepsilon\). For the noiseless calculation, we retain only rows whose leading log intensity is at least \(M\log n\), where \(M\) is a fixed large constant depending on \(\beta\). Compared with the full band, discarding these transition rows changes the total log bound by only \(O(s\log^2 n)=o(W)\).
+
+\step{Upper bounds.}
+We begin by tightening the union-bound estimates for regular and near-agreeing pairs so that the constant \(\kappa_0(v)\) emerges cleanly. Refine the pivot groups of Section~\ref{sec:noisy-face-proof} so that each row uses both orientations of the pair: landmarks at distance \(j\) from the first face with strictly smaller distance to the second face, together with landmarks at distance \(j\) from the second face with strictly smaller distance to the first face. Within row \(j\), these two subsets are disjoint and contribute with opposite signs; across different rows, the groups are also disjoint because of the strict inequality on the opposite radius.
+
+For regular pairs at radius at least \(\sqrt n\log n\), conditional Chebyshev's inequality shows that each group retains a \((1-o(1))\) fraction of its shell mass. The binomial Fourier bound for the signed sum of both subsets is
+\[
+ (1+o(1))(4\pi\lambda_j)^{-1/2}.
+\]
+Indeed, the modulus of the characteristic function sees only the combined pool of independent Bernoulli variables, whose variance is \((2-o(1))\lambda_j\). Fourier inversion and Gaussian rescaling therefore yield this bound uniformly whenever the shell means diverge. We expose both full sets together in decreasing order of radius. On the inner pivot rows we fall back to the earlier polynomial-mass modal groups, whose combined log loss is \(O(\sqrt n\log^2 n)=o(W)\). Only \(O(1)\) central rows are omitted, and near-agreeing pairs retain the same order-\(n\) entropy gap as before.
+
+\step{Near-opposite pairs.}
+Next we handle pairs whose prescribed assignments nearly oppose each other, where the full-band pivot structure must be replaced by a half-band argument. Put \(k=r-(b_0-a_0)\), where \(a_0,b_0\) denote the numbers of agreeing and conflicting coordinates between the two faces. When \(k>Hs\) for a sufficiently large fixed constant \(H\), the full ordered modal pivots omit at most \(O(n/k)\) rows, and the resulting \(O(n/H)\) loss is absorbed into the extensive entropy gap.
+
+When \(k\le Hs\), we use both orientations in the lower half band, stopping below \(r/2-\sqrt{k+1}\log n\). Given that the first distance equals \(j\), the conditional mean of \(d_1+d_2-r\) is \((k/r)(j-r/2)\). Its conditional variance is \(O(k)\), because the conditional sample from the first face's support assigns nonzero weights only to agreeing and exclusive coordinates, while the other exclusive binomial has size at most \(k\). Consequently, the conditional mean of \(d_2\) exceeds \(r/2\) by \((1-k/r)(r/2-j)\). Chebyshev's inequality then shows that \(d_2\ge r/2\) holds with conditional mass \(1-o(1)\), and the reverse orientation behaves symmetrically. Each of these groups touches only its own lower pivot. Omitting the central rows costs \(O(\sqrt{k+1}\log n\cdot s)=o(W)\), and the log count of such neighbor pairs is \(O((k+1)\log n)=o(W)\).
+
+\step{Combining the pivot bounds.}
+Let \(m\) be the number of chosen pivot rows, and set \(R'=2R\) for a full band or \(R'=R\) for a half band, so that \(m=R'W+o(W/\log n)\). Without errors, only the zero discrepancy vector is permitted. Applying Stirling's approximation and the signed atom bound across the \(m\) pivots gives the log probability bound
+\[
+ -\frac{R'}{2R} a_\rho(C)n
+ -\frac m2\big[(\beta-\tfrac12)\log n+
+                      \log(\kappa/\kappa_0(v))\big]+o(W),
+ \qquad \kappa_0(v)=\frac{\sqrt v}{2\sqrt{2\pi}} .
+\]
+
+In the noisy case \(B>0\), any confusable pair has total discrepancy at most \(4E\) in \(\ell^1\). On a full band, we apply this budget directly to the projected pivot vector. For near-opposite pairs, at least one of the lower and upper half bands must have discrepancy at most \(2E\), without requiring any assignment of the central rows. We therefore apply either the lower half-band groups constructed above or their reflection to the upper half band, and sum the two bounds; the reflection is valid by bitwise complementation.
+
+Thus, with \(m=R'W+o(W/\log n)\) pivots, the discrepancy budget \(Q\) is \(4E\) on a full band and \(2E\) on a half band. In both cases, counting allowed pivot vectors by \(2^m\binom{Q+m}{m}\) shows that their logarithm is at most \(m\log(4eE/(RW))+o(W)\). Relative to the same leading exponential term, the log correction per pivot becomes
+\[
+ -\left(\frac\beta2+\frac5{12}\right)\log n
+   -\tfrac12\log(\kappa/\kappa_0(v))
+   +\log(4e/R)+o(1).
+\]
+Because \(a_\rho(C)\ge 2h_{\rm face}(\rho)\), a negative log correction immediately yields the strict success regimes on the polynomial scale. At the critical powers of \(n\) and the stated strict values of \(\kappa\), continuity provides a strictly negative correction on a fixed neighborhood of \(\rho_*\), while uniqueness of the maximizer provides an extensive exponential margin away from that neighborhood. As in the earlier proofs, smaller codimensions and cross-codimension pairs remain negligible, since polynomial factors in the landmark mean cannot overcome their fixed exponential slack.
+
+\step{Lower bounds.}
+We now establish the matching failure regimes using the second moment method on opposite-assignment face pairs at the optimal codimension. Take the even codimension nearest \(\rho_* n\) and consider the same family of opposite-assignment candidates.
+
+In the noiseless case, the folded rows of a single candidate are independent, and each dense row has zero-atom probability \((1+o(1))(4\pi\lambda_j)^{-1/2}\). The transition rows cost \(o(W)\) as in the upper bound, and the farther tails are negligible because their summed intensities tend to zero. Combining these estimates gives the log mean number of collisions:
+\[
+ -\frac{R_*}{2}W\big[(\beta-\tfrac12)\log n+
+                               \log(\kappa/\kappa_*)\big]+o(W).
+\]
+This logarithm grows at least as a positive multiple of \(W\) throughout the stated failure regimes. Polynomial prefactors in the mean do not change the typical relative Fourier estimates or the atypical macro and meso bounds, and micro-close pairs cost only \(O(\sqrt n\log n)=o(W)\). The same relative second moment calculation therefore proves failure.
+
+For the noisy lower bound, we replace the hard global \(\ell^1\) indicator by a hybrid weight that treats dense rows exactly and tilts the remaining rows smoothly. Set \(M_0=E/n^2\), \(\gamma=1/9\), and \(\eta_n=n^{-1/2}\), and declare a folded row dense when \(\lambda_j\ge E^2\exp(4n^\gamma)\). Assign each candidate the weight
+\[
+ \mathbf1_{\sum_{\rm dense}|S_j|\le (2-\eta_n)E}
+ \mathbf1_{\sum_{\rm other}|S_j|\le \eta_n E}
+ \exp\left(-\sum_{\rm other} S_j^2/(2M_0^2)\right).
+\]
+Every pair in the support of this weight is confusable. For a single candidate, the folded rows are independent, and the tilted first absolute moment on each nondense row is \(O(M_0)\). When \(\lambda_j\le M_0^2\), this bound follows directly from the untilted variance. When \(\lambda_j>M_0^2\), it follows by combining the local central lower bound \(\gtrsim M_0/\sqrt{\lambda_j}\) for the normalizer with the maximum-atom bound inside the Gaussian moment sum. Applying Markov's inequality to these tilted nondense rows shows that the second indicator discards only a \(O(n M_0/(\eta_n E))=o(1)\) fraction of the mean.
+
+For any prescribed dense vector of \(\ell^1\) norm at most \(2E\), the marginal local atom probability is uniformly \((1+o(1))\prod_{\rm dense}(4\pi\lambda_j)^{-1/2}\); the hybrid Fourier calculation below also yields this single-block estimate. On the nondense rows, the Gaussian product weight has log mean \(-\tfrac12\sum_{\rm other}\log(1+2\lambda_j/M_0^2)+o(1)\), by the same calculation as in the preceding noisy proof restricted to those rows. This sum is \(o(W)\). Indeed, the shoulder between \(\lambda_j/M_0^2=n^{-3}\) and the dense cutoff contains \(O(s(n^\gamma+\log n))\) rows and contributes \(O(s(n^\gamma+\log n)^2)=o(W)\), while below the shoulder the intensity ratios sum to \(o(1)\).
+
+The number of dense rows is \(m=R_*W+O(s(n^\gamma+\log n))\), and discarding the shoulder changes the leading shell sum, after subtracting the extensive \(B\) terms, by \(o(W)\). By counting positive and nonnegative compositions, the number of integer points in an \(\ell^1\) ball of radius \(Q\) lies between \(2^m\binom Qm\) and \(2^m\binom{Q+m}{m}\). Setting \(Q=\lfloor(2-\eta_n)E\rfloor\), its logarithm is \(m\log(4eE/m)+o(W)\). Multiplying by the dense atom probability and cancelling the extensive rate against the log candidate count gives the log mean total weight:
+\[
+ R_*W\left[
+ \log(4e/R_*)-\tfrac12\log(\kappa/\kappa_*)
+                -\tfrac12(\beta+\tfrac56)\log n
+ \right]+o(W).
+\]
+
+\step{Relative hybrid Fourier estimate.}
+To control the second moment of the weighted count on typical candidate pairs, we show that the joint hybrid Fourier integral factorizes up to a \(1+o(1)\) factor uniformly over prescribed dense vectors. Use the typicality conditions of Section~\ref{sec:noiseless-face-proof}, but tighten the signed-overlap cutoff to \(n^{-1/8}\); the excluded atypical fraction is still \(\exp(-\Omega(n^{3/4}))\).
+
+For two prescribed dense vectors \(z,z'\) in their respective \(\ell^1\) balls, integrate with Haar measure on the dense frequencies and with the wrapped Gaussian of frequency variance \(M_0^{-2}\) on all other coordinates, weighted by the target phase \(\exp(-i\theta\cdot z-i\theta'\cdot z')\). Drop distant rows of total intensity \(o(1)\) and pass to Poisson characteristic functions as before. Under the tightened overlap cutoff, the conditional neutral singleton bound improves to \(\lambda_j e^{-O(n^{1/12}+\log n)}\). This holds because an off-anchor slope of at most \(n^{-1/8}\) shifts the conditional mean by \(O(Wn^{-1/8})\), and the other exclusive binomial pays the square of that shift divided by order \(n\).
+
+Write \(L_j=0\) on dense rows and \(L_j=M_0\) on nondense rows, and localize both frequency blocks to the box
+\[
+ |\theta_j|\le e^{n^\gamma}/\sqrt{2\lambda_j+L_j^2} .
+\]
+On rows with \(\lambda_j\ge L_j^2\), the singleton bounds control the integral outside this box; on the remaining rows, the wrapped Gaussian tails provide the localization. Using the normalized measures and the condition \(\gamma>1/12\), the omitted tail integral has absolute value at most \(\exp(-\exp(\Omega(n^\gamma)))\). This error is negligible compared to the product of the main Gaussian integrals, whose log magnitudes are \(-O(n)\) up to the dense normalizations, which themselves incur a log cost of \(O(n)\).
+
+On the localized core, the dense phase is uniformly \(1+o(1)\), because \(\|z\|_1\le2E\) and every dense frequency is at most \(O(E^{-1}e^{-n^\gamma})\). The uniform relative Poisson and projection errors therefore transfer directly to the core integrals. The quartic error is \(O(ne^{4n^\gamma}/M_0^2)=o(1)\). After diagonal scaling, the covariance matrix is the Walsh cross-Gram matrix with coordinate contractions in both blocks; its cross part has Frobenius norm \(o(1)\), so the Gaussian determinant ratio is \(1+o(1)\). Truncating these local Gaussian integrals back to the box also has negligible relative cost, as before.
+
+Consequently, the hybrid joint integral is at most \(1+o(1)\) times the product of the corresponding single-candidate integrals, uniformly over \(z,z'\). Summing over both dense balls, upper bounding the tail-truncated joint weights by the untruncated ones, and applying the single-candidate truncation lower bound completes the estimate for typical pairs. The atypical estimates continue to apply to the supported weights: the fixed-contraction atypical count loses \(\exp(-\Omega(n^{3/4}))\) against a shell penalty of \(\exp(O(W\log n))\), and the intermediate close-pair count retains its extensive gap. In the microscopic regime, the total mean weight grows faster than \(\exp(O(\sqrt n\log n))\) on the asserted failure sides. Chebyshev's inequality now proves failure for \(\beta<-5/6\), and for \(\beta=-5/6\) with \(\kappa<\kappa_{\rm noise}\).
+\end{proof}
